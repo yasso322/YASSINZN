@@ -1,0 +1,2719 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+    <meta name="theme-color" content="#2b1b5a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="../manifest.webmanifest">
+    <link rel="apple-touch-icon" href="../AssetsPHOTO/LOGO.jpg">
+    <title>YASSINZN — ألعاب مغربية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #fff;
+            --gold: #f4c542;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px)
+        }
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: pan-y
+        }
+
+        body {
+            background: #2b1b5a;
+            font-family: Cairo, Tahoma, sans-serif;
+            color: var(--ink)
+        }
+
+        button {
+            font-family: inherit
+        }
+
+        #bg {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1
+        }
+
+        /* HUD & Top Bar */
+        #hud {
+            position: fixed;
+            top: calc(12px + env(safe-area-inset-top, 0px));
+            right: 15px;
+            display: flex;
+            gap: 12px;
+            z-index: 10
+        }
+
+        .badge {
+            background: #0b1d3add;
+            border: 2px solid #ffd54f;
+            border-radius: 24px;
+            padding: 4px 14px;
+            font-weight: 900;
+            font-size: 16px;
+            direction: ltr;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 0 #0006
+        }
+
+        /* UI Layout */
+        #ui {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            overflow: auto;
+            z-index: 5
+        }
+
+        .home-layout {
+            width: min(1500px, 100%);
+            height: min(94dvh, 900px);
+            min-height: 550px;
+            display: grid;
+            grid-template-columns: minmax(300px, .9fr) minmax(460px, 1.1fr);
+            gap: 16px;
+            direction: ltr;
+            margin: auto;
+            text-align: center
+        }
+
+        .home-left,
+        .home-right {
+            direction: rtl;
+            border: 3px solid #ffdf75;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 12px 0 #0006, inset 0 0 30px #fff2
+        }
+
+        .home-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px;
+            background: linear-gradient(180deg, #11164db3, #9f2815a6), url('../AssetsPHOTO/IMG_8956.PNG') center/cover, linear-gradient(#673ab7, #f59e0b);
+            position: relative
+        }
+
+        .profile-bar {
+            align-self: stretch;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: #07132bdd;
+            border: 2px solid #ffffff70;
+            border-radius: 22px;
+            text-align: right
+        }
+
+        .profile-avatar {
+            width: 50px;
+            height: 50px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: linear-gradient(#ffcc80, #ef5350);
+            font-size: 33px;
+            border: 3px solid #fff
+        }
+
+        .profile-name {
+            font-weight: 900;
+            flex: 1
+        }
+
+        .profile-level {
+            color: #ffe082;
+            font-size: 12px
+        }
+
+        .xp-track {
+            height: 6px;
+            margin-top: 3px;
+            overflow: hidden;
+            border-radius: 99px;
+            background: #ffffff33;
+        }
+
+        .xp-track span {
+            display: block;
+            height: 100%;
+            background: linear-gradient(90deg, #ffe082, #f59e0b);
+        }
+
+        .hero-brand {
+            width: clamp(125px, 16vw, 205px);
+            border: 4px solid white;
+            border-radius: 28%;
+            box-shadow: 0 8px 0 #0005;
+        }
+
+        .hero-character {
+            font-size: clamp(90px, 15vw, 190px);
+            line-height: .95;
+            filter: drop-shadow(0 10px 5px #0008);
+            margin-top: 5px
+        }
+
+        .hero-actions {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center
+        }
+
+        .hero-play {
+            width: 100%;
+            max-width: 400px;
+            min-height: 82px;
+            font-size: clamp(30px, 4vw, 48px);
+            border: 5px solid #fff2a8;
+            background: linear-gradient(#ffdf37, #f49a00 68%, #cd5b00);
+            color: #fff;
+            text-shadow: 0 3px 2px #743000;
+            box-shadow: 0 9px 0 #773600, inset 0 2px 6px #fff9
+        }
+
+        .hero-small {
+            min-width: 140px;
+            font-size: 18px
+        }
+
+        .home-right {
+            display: flex;
+            flex-direction: column;
+            padding: 18px;
+            background: linear-gradient(180deg, #0a1a50ed, #651944ed), url('../AssetsPHOTO/IMG_8957.PNG') center/cover;
+            overflow-y: auto
+        }
+
+        .ribbon {
+            width: fit-content;
+            align-self: center;
+            min-width: min(80%, 340px);
+            padding: 7px 18px;
+            border: 4px solid #f5d77a;
+            border-radius: 22px;
+            background: linear-gradient(90deg, #0b513b, #08734e, #0b513b);
+            box-shadow: 0 5px 0 #432500;
+            font-size: clamp(19px, 2.5vw, 29px);
+            margin: 2px 0 14px
+        }
+
+        .mode-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 9px;
+            margin-bottom: 16px
+        }
+
+        .mode-card {
+            border: 3px solid #fff;
+            border-radius: 18px;
+            min-height: 82px;
+            padding: 8px 3px;
+            color: #fff;
+            font-weight: 900;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #0007;
+            text-shadow: 0 2px 2px #0008;
+            transition: transform .12s, filter .12s
+        }
+
+        .mode-card span {
+            display: block;
+            font-size: 29px;
+            margin-bottom: 2px
+        }
+
+        .mode-card.selected {
+            outline: 4px solid #ffe34d;
+            transform: translateY(-3px);
+            filter: brightness(1.2)
+        }
+
+        .mode-card:nth-child(1) {
+            background: linear-gradient(#ef4444, #8e1010)
+        }
+
+        .mode-card:nth-child(2) {
+            background: linear-gradient(#31bd55, #096528)
+        }
+
+        .mode-card:nth-child(3) {
+            background: linear-gradient(#328df5, #143d9d)
+        }
+
+        .mode-card:nth-child(4) {
+            background: linear-gradient(#ffb42c, #a94b00)
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 9px
+        }
+
+        .game-tile {
+            min-width: 0;
+            aspect-ratio: 1 / .88;
+            border: 3px solid #fff;
+            border-radius: 17px;
+            color: white;
+            font: 900 15px Cairo, Tahoma, sans-serif;
+            text-shadow: 0 2px 2px #000b;
+            cursor: pointer;
+            box-shadow: 0 5px 0 #0007;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1px;
+            transition: transform .12s, filter .12s;
+            padding: 4px
+        }
+
+        .game-tile:hover,
+        .mode-card:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.15)
+        }
+
+        .game-tile .tile-icon {
+            font-size: clamp(32px, 5vw, 58px);
+            line-height: 1.1;
+            filter: drop-shadow(0 3px 2px #0006)
+        }
+
+        .game-tile small {
+            font-size: 11px;
+            opacity: .9
+        }
+
+        .game-tile:nth-child(6n+1) {
+            background: linear-gradient(145deg, #fb3553, #920c2c)
+        }
+
+        .game-tile:nth-child(6n+2) {
+            background: linear-gradient(145deg, #25c75a, #07642e)
+        }
+
+        .game-tile:nth-child(6n+3) {
+            background: linear-gradient(145deg, #209cff, #123b9c)
+        }
+
+        .game-tile:nth-child(6n+4) {
+            background: linear-gradient(145deg, #ffca28, #ed6900)
+        }
+
+        .game-tile:nth-child(6n+5) {
+            background: linear-gradient(145deg, #a542ec, #53128e)
+        }
+
+        .game-tile:nth-child(6n) {
+            background: linear-gradient(145deg, #08c5bd, #075876)
+        }
+
+        .game-tile.available {
+            box-shadow: 0 5px 0 #0007, 0 0 12px #fff5
+        }
+
+        .game-tile.team-unavailable {
+            opacity: .58;
+            filter: grayscale(.45)
+        }
+
+        .mode-summary {
+            margin: 0 0 10px;
+            color: #ffedb2;
+            font-size: 13px
+        }
+
+        .home-right .hint {
+            margin-top: 12px
+        }
+
+        /* Main Title */
+        .title-box {
+            margin-bottom: 15px
+        }
+
+        .brand-logo {
+            width: clamp(100px, 20vw, 172px);
+            aspect-ratio: 1;
+            object-fit: cover;
+            border: 5px solid #fff;
+            border-radius: 30%;
+            box-shadow: 0 8px 0 #0006, 0 0 28px #ffd54f88;
+            margin-bottom: 10px
+        }
+
+        .subtitle {
+            margin: 8px 0 0;
+            color: #fff1c2;
+            font-size: clamp(14px, 3vw, 19px);
+            text-shadow: 0 2px 3px #0008
+        }
+
+        h1 {
+            margin: 0;
+            font-weight: 900;
+            font-size: clamp(40px, 9vw, 85px);
+            line-height: 1;
+            color: #ffd54f;
+            -webkit-text-stroke: 3px #7a1010;
+            paint-order: stroke fill;
+            text-shadow: 0 5px 0 #5a0b0b
+        }
+
+        h1 b {
+            color: #3ddc5a;
+            -webkit-text-stroke: 3px #0d4a1c;
+            display: inline-block;
+            text-shadow: 0 5px 0 #073012
+        }
+
+        /* Menu Grid */
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 550px;
+            align-items: center
+        }
+
+        .row-btns {
+            display: flex;
+            gap: 12px;
+            width: 100%
+        }
+
+        .hint {
+            margin: 0;
+            color: #fff4c2;
+            font-size: 14px;
+            line-height: 1.7
+        }
+
+        .game-card {
+            width: 100%;
+        }
+
+        .game-card small {
+            display: block;
+            font: 700 13px Cairo, Tahoma, sans-serif;
+            opacity: .9;
+            margin-top: 3px
+        }
+
+        .info-panel {
+            width: min(92vw, 520px);
+            padding: 18px;
+            border: 2px solid #ffd54f;
+            border-radius: 20px;
+            background: #0b1d3add;
+            box-shadow: 0 8px 0 #0005;
+            line-height: 1.8
+        }
+
+        .info-panel p {
+            margin: 8px 0
+        }
+
+        .ready-card {
+            width: min(92vw, 560px);
+            padding: 22px;
+            border: 3px solid #ffe082;
+            border-radius: 24px;
+            background: linear-gradient(145deg, #12245df2, #471b5bed);
+            box-shadow: 0 10px 0 #0006;
+        }
+
+        .roster-title {
+            margin: 14px 0 8px;
+            color: #ffe082;
+            font-size: 19px;
+        }
+
+        .roster-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 8px;
+            max-height: 34vh;
+            overflow-y: auto;
+            padding: 3px 4px 8px;
+        }
+
+        .roster-card {
+            display: grid;
+            grid-template-columns: 52px 1fr auto;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            border: 2px solid var(--character-color);
+            border-radius: 16px;
+            background: linear-gradient(135deg, #0d1d42e8, #332050e8);
+            text-align: right;
+        }
+
+        .roster-avatar {
+            display: grid;
+            place-items: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 15px;
+            background: linear-gradient(145deg, var(--character-color), #101b35);
+            font-size: 30px;
+            box-shadow: inset 0 2px 6px #fff8, 0 3px 5px #0008;
+        }
+
+        .roster-name {
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .roster-kit {
+            display: block;
+            color: #ffe082;
+            font-size: 11px;
+        }
+
+        .roster-switch {
+            display: flex;
+            gap: 4px;
+        }
+
+        .roster-switch button {
+            width: 34px;
+            min-height: 38px;
+            padding: 0;
+            border-radius: 10px;
+            font-size: 17px;
+        }
+
+        .progress-chip {
+            display: inline-flex;
+            gap: 9px;
+            flex-wrap: wrap;
+            justify-content: center;
+            color: #ffe082;
+            font-weight: 900;
+        }
+
+        .ready-icon {
+            font-size: clamp(52px, 12vw, 88px);
+            line-height: 1.1
+        }
+
+        .ready-title {
+            margin: 4px 0;
+            color: #ffe082;
+            font-size: clamp(24px, 6vw, 38px)
+        }
+
+        .ready-description {
+            margin: 8px 0 14px;
+            color: #fff;
+            font-size: 16px
+        }
+
+        .ready-controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin: 12px 0 18px
+        }
+
+        .control-chip {
+            padding: 7px 12px;
+            border: 1px solid #ffffff80;
+            border-radius: 14px;
+            background: #ffffff18;
+            font-weight: 900
+        }
+
+        .ready-start {
+            min-width: 210px;
+            margin: 0 auto;
+            font-size: 23px
+        }
+
+        .pause-btn {
+            margin-top: 8px;
+            padding: 8px 18px;
+            font-size: 16px
+        }
+
+        .pause-banner {
+            position: absolute;
+            inset: 0;
+            z-index: 25;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: #07132dbb;
+            color: #fff;
+            font-size: clamp(24px, 6vw, 42px);
+            font-weight: 900;
+            text-shadow: 0 3px 5px #000;
+            pointer-events: none
+        }
+
+        .pause-banner[hidden] {
+            display: none
+        }
+
+        .control-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5px 15px;
+            text-align: right
+        }
+
+        /* Buttons Styling */
+        .b {
+            font: 900 20px Cairo, Tahoma, sans-serif;
+            padding: 14px 20px;
+            border-radius: 20px;
+            border: 3px solid #fff9;
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #0007;
+            text-shadow: 0 2px 0 #0006;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex: 1;
+            transition: transform 0.1s
+        }
+
+        .b:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #0007
+        }
+
+        .r {
+            background: linear-gradient(#ef4a45, #a01818);
+            border-color: #ff9996
+        }
+
+        .gr {
+            background: linear-gradient(#3fb85a, #14692c);
+            border-color: #86efac
+        }
+
+        .y {
+            background: linear-gradient(#ffd54f, #f29a14);
+            color: #4a2c00;
+            text-shadow: none;
+            border-color: #fff
+        }
+
+        .blue {
+            background: linear-gradient(#3b82f6, #1d4ed8);
+            border-color: #93c5fd
+        }
+
+        /* Sidebar Floating Buttons */
+        .side-bar {
+            position: fixed;
+            left: 15px;
+            top: 80px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10
+        }
+
+        .side-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: linear-gradient(#f59e0b, #b45309);
+            border: 3px solid #fff;
+            font-size: 26px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 0 #0007
+        }
+
+        /* Game Canvas View */
+        #game-container {
+            position: relative;
+            width: min(94vw, calc((100vh - 120px)*16/9));
+            aspect-ratio: 16/9;
+            margin: auto
+        }
+
+        #game-container.board-game {
+            width: min(92vw, calc(100dvh - 76px), 620px);
+            aspect-ratio: 1;
+        }
+
+        #game-container.board-game #cv,
+        #game-container.board-game canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        #cv canvas {
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            border: 4px solid var(--gold);
+            border-radius: 14px;
+            box-shadow: 0 8px 0 #0006;
+            display: block
+        }
+
+        /* Touch Controls Overlay */
+        #touch-overlay {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 20;
+            display: none
+        }
+
+        #touch-overlay.button-controls .t-pad {
+            position: absolute;
+            width: 40%;
+            height: 44%;
+            display: grid;
+            grid-template-columns: repeat(3, clamp(34px, 8vw, 58px));
+            grid-template-rows: repeat(2, clamp(34px, 8vw, 58px));
+            gap: clamp(3px, 1vw, 8px);
+            pointer-events: none;
+        }
+
+        .gesture-pad {
+            grid-column: 1 / 3;
+            grid-row: 1 / 3;
+            display: grid;
+            place-items: center;
+            min-width: 0;
+            min-height: 0;
+            border: 2px solid #ffffff9c;
+            border-radius: 22px;
+            color: #fff;
+            background: radial-gradient(ellipse at center, #ffffff35, #07152bb8 75%);
+            box-shadow: inset 0 2px 8px #fff3, 0 4px 10px #0007;
+            font: 900 clamp(11px, 2.3vw, 17px) Cairo, Tahoma, sans-serif;
+            text-shadow: 0 2px 4px #000;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .gesture-pad.active {
+            background: radial-gradient(ellipse at center, #ffe08277, #07152bd8 75%);
+        }
+
+        #touch-overlay.button-controls .t-pad.single-action .gesture-pad {
+            display: none;
+        }
+
+        #touch-overlay.button-controls .p0-pad {
+            left: 10px;
+            bottom: 8px;
+        }
+
+        #touch-overlay.button-controls .p1-pad {
+            right: 10px;
+            top: 8px;
+        }
+
+        #touch-overlay.button-controls .p2-pad {
+            right: 10px;
+            bottom: 8px;
+        }
+
+        #touch-overlay.button-controls .p3-pad {
+            left: 10px;
+            top: 8px;
+        }
+
+        .touch-key {
+            min-width: 0;
+            min-height: 0;
+            padding: 0;
+            pointer-events: auto;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            border: 2px solid #fff;
+            border-radius: 14px;
+            color: #fff;
+            background: linear-gradient(#354d70e8, #101b35e8);
+            box-shadow: 0 4px 0 #0009, inset 0 1px 3px #fff5;
+            font: 900 clamp(14px, 3vw, 23px) Cairo, Tahoma, sans-serif;
+        }
+
+        .touch-key:active,
+        .touch-key.pressed {
+            transform: translateY(3px) scale(.96);
+            filter: brightness(1.3);
+        }
+
+        .touch-key[data-key="action"] {
+            background: linear-gradient(#eb544d, #9e1515);
+            border-color: #ffaaa4;
+            grid-column: 3;
+            grid-row: 1;
+        }
+
+        #touch-overlay.button-controls .t-pad.single-action .touch-key[data-key="action"] {
+            grid-column: 1 / 4;
+            grid-row: 1 / 3;
+            width: 100%;
+            height: 100%;
+            border-radius: 22px;
+            font-size: clamp(22px, 5vw, 38px);
+        }
+
+        #touch-overlay.button-controls .t-pad.single-action .touch-key[data-key="action"] {
+            grid-column: 2;
+            grid-row: 1;
+        }
+
+        .t-pad {
+            position: absolute;
+            pointer-events: auto;
+            display: flex;
+            direction: ltr;
+            align-items: center;
+            justify-content: center
+        }
+
+        /* Touch Button Layouts for P1-P4 */
+        .p0-pad {
+            bottom: 10px;
+            left: 12px;
+            gap: 14px
+        }
+
+        .p1-pad {
+            top: 10px;
+            right: 12px;
+            flex-direction: row-reverse;
+            gap: 14px
+        }
+
+        .p2-pad {
+            bottom: 10px;
+            right: 12px;
+            flex-direction: row-reverse;
+            gap: 14px
+        }
+
+        .p3-pad {
+            top: 10px;
+            left: 12px;
+            gap: 14px
+        }
+
+        .playing #hud,
+        .playing .side-bar {
+            display: none
+        }
+
+        @media (orientation: portrait) and (max-width: 900px) {
+            body.playing {
+                overflow: hidden;
+            }
+
+            body.playing #ui {
+                overflow: hidden;
+                padding: 0;
+            }
+
+            body.playing #game-container:not(.board-game) {
+                position: fixed;
+                left: 50%;
+                top: 50%;
+                width: min(94dvh, 166.4vw);
+                aspect-ratio: 16 / 9;
+                margin: 0;
+                transform: translate(-50%, -50%) rotate(90deg);
+                transform-origin: center;
+            }
+
+            body.playing #ui>.row-btns {
+                position: fixed;
+                z-index: 31;
+                left: 50%;
+                bottom: max(8px, env(safe-area-inset-bottom));
+                width: min(94vw, 480px) !important;
+                margin: 0 !important;
+                transform: translateX(-50%);
+                flex-direction: row;
+            }
+
+            body.playing #game-container.board-game {
+                width: min(92vw, calc(100dvh - 92px), 620px);
+                position: relative;
+                left: auto;
+                top: auto;
+                transform: none;
+                margin: auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+            #touch-overlay.compact-controls .t-pad {
+                gap: 6px
+            }
+
+            #touch-overlay.button-controls .t-pad {
+                width: 48%;
+                height: 46%;
+                grid-template-columns: repeat(3, clamp(32px, 11vw, 50px));
+                grid-template-rows: repeat(2, clamp(32px, 11vw, 50px));
+                gap: 3px;
+            }
+
+            .gesture-pad {
+                border-radius: 18px;
+            }
+        }
+
+        .home-screen #hud,
+        .home-screen .side-bar {
+            display: none
+        }
+
+        @media (max-width: 600px) {
+            #ui {
+                padding: 12px;
+                justify-content: flex-start;
+                padding-top: 74px;
+                padding-bottom: 18px
+            }
+
+            .row-btns {
+                flex-direction: column
+            }
+
+            .b {
+                font-size: 17px;
+                padding: 11px 14px
+            }
+
+            .side-bar {
+                left: 8px;
+                top: 68px;
+                gap: 7px
+            }
+
+            .side-btn {
+                width: 44px;
+                height: 44px;
+                font-size: 21px
+            }
+
+            .brand-logo {
+                width: 112px
+            }
+
+            #game-container {
+                width: min(94vw, calc((100dvh - 155px)*16/9))
+            }
+
+            .control-list {
+                grid-template-columns: 1fr
+            }
+
+            .home-layout {
+                display: flex;
+                flex-direction: column;
+                height: auto;
+                min-height: 0;
+                gap: 12px
+            }
+
+            .home-left {
+                min-height: 520px;
+                padding: 15px
+            }
+
+            .home-right {
+                min-height: 660px;
+                padding: 12px
+            }
+
+            .mode-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr))
+            }
+
+            .game-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 7px
+            }
+
+            .game-tile {
+                font-size: 13px;
+                border-radius: 13px
+            }
+
+            .game-tile .tile-icon {
+                font-size: 38px
+            }
+
+            #ui {
+                overflow-y: auto;
+                touch-action: pan-y
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="bg"></canvas>
+
+    <!-- Top HUD -->
+    <div id="hud">
+        <div class="badge">🎮 YASSINZN</div>
+    </div>
+
+    <!-- Side Floating Menu -->
+    <div class="side-bar">
+        <button class="side-btn" onclick="shop()" aria-label="المتجر">🛒</button>
+        <button class="side-btn" onclick="settings()" aria-label="الإعدادات">⚙️</button>
+        <button class="side-btn" onclick="chooseMode('tour')" aria-label="البطولة">🏆</button>
+    </div>
+
+    <!-- Main UI Container -->
+    <div id="ui"></div>
+
+    <script>
+        const bg = document.getElementById('bg'), bx = bg.getContext('2d'), ui = document.getElementById('ui');
+
+        let installPrompt;
+        addEventListener('beforeinstallprompt', event => {
+            event.preventDefault();
+            installPrompt = event;
+            const button = document.getElementById('install-app');
+            if (button) button.hidden = false;
+        });
+        addEventListener('appinstalled', () => {
+            installPrompt = null;
+            const button = document.getElementById('install-app');
+            if (button) button.hidden = true;
+        });
+        async function installApp() {
+            if (!installPrompt) {
+                alert('من قائمة المتصفح اختار «إضافة إلى الشاشة الرئيسية» باش تلعب بحال التطبيق.');
+                return;
+            }
+            await installPrompt.prompt();
+            installPrompt = null;
+            const button = document.getElementById('install-app');
+            if (button) button.hidden = true;
+        }
+        if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+            addEventListener('load', () => navigator.serviceWorker.register('../sw.js', { scope: '../' }).catch(error => console.warn('Offline support unavailable:', error)));
+        }
+
+        function palm(x, y, h, s) { bx.strokeStyle = '#5a3b1e'; bx.lineWidth = s * 4; bx.beginPath(); bx.moveTo(x, y); bx.quadraticCurveTo(x + s * 8, y - h / 2, x + s * 3, y - h); bx.stroke(); bx.strokeStyle = '#1e7a3a'; bx.lineWidth = s * 3; for (let a = -2; a <= 2; a++) { bx.beginPath(); bx.moveTo(x + s * 3, y - h); bx.quadraticCurveTo(x + s * 3 + a * s * 12, y - h - s * 18, x + s * 3 + a * s * 20, y - h + s * 10); bx.stroke() } }
+        function drawBG() {
+            const w = bg.width = innerWidth, h = bg.height = innerHeight, u = h / 450, gy = h * .8;
+            let g = bx.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#2e2370'); g.addColorStop(.4, '#d9584e'); g.addColorStop(.7, '#ffae5c'); g.addColorStop(1, '#ffd98a'); bx.fillStyle = g; bx.fillRect(0, 0, w, h);
+            bx.fillStyle = '#b5562f'; for (let x = 0; x < w; x += 46) { let bh = h * .1 + ((x * 7) % 5) * h * .014; bx.fillRect(x, gy - bh, 43, bh + h) }
+            palm(w * .06, h, h * .5, u * 1.6); palm(w * .9, h, h * .45, u * 1.5);
+            for (let x = 0, i = 0; x < w; x += 34, i++) { bx.fillStyle = ['#a01818', '#14692c', '#f2b01e', '#1d5fb4'][i % 4]; bx.fillRect(x, h - 12, 34, 12) }
+        }
+        addEventListener('resize', drawBG); drawBG();
+
+        const C = ['#e53935', '#1e88e5', '#43a047', '#fdd835'], TC = ['#e53935', '#2e9e4f'], TN = ['الأحمر', 'الأخضر'];
+        const audioBase = new URL('../AssetsAudio/', document.baseURI);
+        const activeSounds = new Set();
+        const KM = [{ u: 'w', d: 's', l: 'a', r: 'd', a: ' ' }, { u: 'arrowup', d: 'arrowdown', l: 'arrowleft', r: 'arrowright', a: 'enter' }, { u: 'i', d: 'k', l: 'j', r: 'l', a: 'h' }, { u: '8', d: '5', l: '4', r: '6', a: '0' }];
+        const touchState = Array.from({ length: 4 }, () => ({ dx: 0, dy: 0, actions: new Set() }));
+        const touchButtons = Array.from({ length: 4 }, () => ({ left: new Set(), right: new Set(), up: new Set(), down: new Set(), action: new Set() }));
+        const touchGestures = Array.from({ length: 4 }, () => new Map());
+
+        const keys = {};
+        addEventListener('keydown', e => {
+            keys[e.key.toLowerCase()] = 1;
+            if (/^arrow/i.test(e.key) || e.key === ' ') e.preventDefault();
+            if (S?.g?.handleKey && !S.paused && !S.g.done) S.g.handleKey(e);
+        });
+        addEventListener('keyup', e => keys[e.key.toLowerCase()] = 0);
+        addEventListener('blur', clearInputs);
+
+        function clearInputs() {
+            Object.keys(keys).forEach(key => keys[key] = 0);
+            touchState.forEach(state => { state.dx = 0; state.dy = 0; state.actions.clear(); });
+            touchButtons.forEach(state => Object.values(state).forEach(set => set.clear()));
+            touchGestures.forEach(gestures => gestures.clear());
+            document.querySelectorAll('.gesture-pad.active').forEach(pad => pad.classList.remove('active'));
+            document.querySelectorAll('.touch-key.pressed').forEach(button => button.classList.remove('pressed'));
+        }
+
+        const inp = i => {
+            const k = KM[i];
+            const t = touchState[i];
+            const buttons = touchButtons[i];
+            let gestureX = 0, gestureY = 0;
+            for (const gesture of touchGestures[i].values()) { gestureX += gesture.dx; gestureY += gesture.dy; }
+            const dx = (!!keys[k.r] - !!keys[k.l]) + (!!buttons.right.size - !!buttons.left.size) + t.dx + gestureX;
+            const dy = (!!keys[k.d] - !!keys[k.u]) + (!!buttons.down.size - !!buttons.up.size) + t.dy + gestureY;
+            return {
+                dx: Math.max(-1, Math.min(1, dx)),
+                dy: Math.max(-1, Math.min(1, dy)),
+                a: !!keys[k.a] || !!buttons.action.size || t.actions.size > 0,
+                up: !!keys[k.u] || !!buttons.up.size || t.dy < -.35 || ([4, 6].includes(S.cur) && (!!buttons.action.size || t.actions.size > 0))
+            };
+        };
+
+        const gc = document.createElement('canvas'); gc.width = 800; gc.height = 450; const x = gc.getContext('2d');
+        let savedSound = 'on';
+        try { savedSound = localStorage.getItem('yassinzn-sound') || 'on'; } catch (error) { console.warn('Settings storage unavailable:', error); }
+        const CHARACTERS = [
+            { name: 'ياسين', kit: 'قميص أحمر · قائد الفريق', icon: '🧒🏻', color: '#e53935' },
+            { name: 'سلمى', kit: 'طقم أخضر · لاعبة سريعة', icon: '👧🏻', color: '#25a65a' },
+            { name: 'حمزة', kit: 'طقم أزرق · مهاجم', icon: '🧑🏽', color: '#2585db' },
+            { name: 'لينا', kit: 'طقم بنفسجي · مراوغة', icon: '👩🏽', color: '#a64ee8' },
+            { name: 'آدم', kit: 'طقم ذهبي · حارس', icon: '🧑🏻‍🦱', color: '#eca92c' },
+            { name: 'نور', kit: 'طقم سماوي · متجولة', icon: '👩🏻‍🦱', color: '#16b9c3' }
+        ];
+        const DEFAULT_PROFILE = { coins: 55000, gems: 25, xp: 0, level: 1, matches: 0, wins: 0, playerStats: [], characters: [0, 1, 2, 3] };
+        function loadProfile() {
+            try {
+                const saved = JSON.parse(localStorage.getItem('yassinzn-profile') || '{}');
+                const characters = Array.isArray(saved.characters) ? saved.characters : [];
+                return { ...DEFAULT_PROFILE, ...saved, characters: Array.from({ length: 4 }, (_, i) => Number.isInteger(characters[i]) ? ((characters[i] % CHARACTERS.length) + CHARACTERS.length) % CHARACTERS.length : DEFAULT_PROFILE.characters[i]), playerStats: Array.isArray(saved.playerStats) ? saved.playerStats : [] };
+            } catch (error) { console.warn('Progress storage unavailable:', error); return { ...DEFAULT_PROFILE, characters: DEFAULT_PROFILE.characters.slice(), playerStats: [] }; }
+        }
+        const profile = loadProfile();
+        const S = { wins: [0, 0, 0, 0], points: [0, 0, 0, 0], soundOff: savedSound === 'off', mode: 'solo', n: 1, characters: profile.characters, profile };
+        let raf, last;
+        function saveProfile() { try { localStorage.setItem('yassinzn-profile', JSON.stringify(S.profile)); } catch (error) { console.warn('Progress could not be saved:', error); } }
+        function refreshLevel() { S.profile.level = Math.floor(Math.max(0, S.profile.xp) / 100) + 1; }
+        function characterFor(player) { return CHARACTERS[S.characters[player] ?? (player % CHARACTERS.length)]; }
+        function playerColor(player) { return characterFor(player).color; }
+        function playerName(player) { return characterFor(player).name; }
+        function cycleCharacter(player, step) {
+            S.characters[player] = (S.characters[player] + step + CHARACTERS.length) % CHARACTERS.length;
+            S.profile.characters = S.characters.slice(); saveProfile(); play(S.cur);
+        }
+        const resultSoundFiles = {
+            win: [
+                ['RBA7', 'قويتي Moroccan Memes Sound Effects.mp3'],
+                ['RBA7', 'كأنما انت شيء حوا جميع المعاني Moroccan Memes Sound Effect.mp3']
+            ],
+            loss: [
+                ['KHSARA', 'شنو هاد المهزلة كنعيشو Moroccan Memes Sound Effect.mp3'],
+                ['KHSARA', 'ابراهيم ارحمني Moroccan Memes Sound Effect.mp3']
+            ],
+            draw: [
+                ['TA3ADOL', 'ياك أخويا مروان.. ياك أخويا لعزيز Moroccan Memes Sound Effect.mp3'],
+                ['TA3ADOL', 'وا فشكال هاد بنادم كريزي مان Moroccan Memes Sound Effects.mp3']
+            ]
+        };
+        function playSound(folder, filename, volume = .7) {
+            if (S.soundOff) return Promise.resolve(false);
+            const source = new URL(`${folder}/${filename.split('/').map(encodeURIComponent).join('/')}`, audioBase);
+            const audio = new Audio(source.href);
+            activeSounds.add(audio);
+            audio.preload = 'auto';
+            audio.volume = volume;
+            const release = () => activeSounds.delete(audio);
+            audio.addEventListener('ended', release, { once: true });
+            audio.addEventListener('error', release, { once: true });
+            return audio.play().then(() => true).catch(error => {
+                release();
+                console.warn(`Audio could not play: ${source.href}`, error);
+                return false;
+            });
+        }
+
+        function playResultSound(result) {
+            if (S.soundOff) return;
+            const choices = resultSoundFiles[result];
+            if (!choices?.length) return;
+            const [folder, filename] = choices[Math.floor(Math.random() * choices.length)];
+            playSound(folder, filename, .85);
+        }
+
+        function gameOutcome(g) {
+            if (g.outcome) return g.outcome;
+            if (/تعادل|تعادلو|draw|tie/i.test(g.msg)) return 'draw';
+            if (S.mode === 'solo') return g.win.includes(0) ? 'win' : 'loss';
+            return g.win.length ? 'win' : 'draw';
+        }
+
+        document.addEventListener('pointerdown', e => {
+            if (S.soundOff || !e.target.closest('button') || e.target.closest('.touch-key')) return;
+            playSound('CLICK', 'click1.mp3.mp3', .45);
+        });
+
+        document.addEventListener('click', e => {
+            if (S.soundOff || e.detail !== 0 || !e.target.closest('button') || e.target.closest('.touch-key')) return;
+            playSound('CLICK', 'click1.mp3.mp3', .45);
+        });
+
+        function scr(h) { ui.innerHTML = h }
+        const back = '<button class="b gr" onclick="menu()" style="margin-top:10px">رجوع</button>';
+
+        function menu() {
+            cancelAnimationFrame(raf);
+            clearInputs();
+            document.body.classList.remove('playing');
+            document.body.classList.add('home-screen');
+            scr(`
+                <div class="home-layout">
+                    <section class="home-left">
+                        <div class="profile-bar"><div class="profile-avatar">${CHARACTERS[S.characters[0] || 0].icon}</div><div class="profile-name">🇲🇦 YASSINZN<div class="profile-level">المستوى ${S.profile.level} · ${S.profile.xp % 100}/100 XP · ${S.profile.wins} انتصارات</div><div class="xp-track"><span style="width:${S.profile.xp % 100}%"></span></div></div><span>💎 ${S.profile.gems}<br>🪙 ${S.profile.coins}</span></div>
+                        <div><img class="hero-brand" src="../AssetsPHOTO/LOGO.jpg" alt="YASSINZN"><div class="hero-character" aria-hidden="true">🧑🏻‍🎓⚽</div><p class="subtitle">مرحبا بيك فالألعاب المغربية!</p></div>
+                        <div class="hero-actions"><button class="b hero-play" onclick="focusGames()">اللعب ▶</button><button id="install-app" class="b y hero-small" onclick="installApp()" hidden>📲 ثبّت اللعبة</button><button class="b blue hero-small" onclick="chooseMode('multi')">👥 الأصدقاء</button><button class="b gr hero-small" onclick="shop()">🛒 المتجر</button><button class="b blue hero-small" onclick="settings()">⚙️ الإعدادات</button></div>
+                    </section>
+                    <section class="home-right" id="game-menu">
+                        <h2 class="ribbon">اختار نمط اللعب</h2>
+                        <div class="mode-grid">
+                            <button class="mode-card ${S.mode === 'solo' ? 'selected' : ''}" onclick="chooseMode('solo')"><span>🧑🏻</span>لاعب واحد ضد AI</button>
+                            <button class="mode-card ${S.mode === 'multi' ? 'selected' : ''}" onclick="chooseMode('multi')"><span>👥</span>صحابك 2–4</button>
+                            <button class="mode-card ${S.mode === 'team' ? 'selected' : ''}" onclick="chooseMode('team')"><span>🛡️</span>فريق ضد فريق 2v2</button>
+                            <button class="mode-card ${S.mode === 'tour' ? 'selected' : ''}" onclick="chooseMode('tour')"><span>🏆</span>البطولة</button>
+                        </div>
+                        ${(S.mode === 'multi' || S.mode === 'tour') ? `<p class="mode-summary">عدد اللاعبين: ${[2, 3, 4].map(n => `<button class="b ${S.n === n ? 'y' : 'blue'}" style="display:inline-flex;min-width:44px;padding:3px 10px;font-size:14px" onclick="setPlayers(${n})">${n}</button>`).join(' ')}</p>` : `<p class="mode-summary">${modeDescription()}</p>`}
+                        <h2 class="ribbon" id="games">اختار اللعبة</h2>
+                        <div class="game-grid">${GAME_CATALOGUE.map(game => {
+                const unavailable = S.mode === 'team' && ![0, 2, 9].includes(game.id);
+                return `<button class="game-tile available ${unavailable ? 'team-unavailable' : ''}" onclick="selectGame(${game.id})" aria-label="${game.name}"><span class="tile-icon">${game.icon}</span><span>${game.name}</span><small>${unavailable ? 'غير متاح 2v2' : 'العب دابا'}</small></button>`;
+            }).join('')}</div>
+                        <p class="hint">اختار أي لعبة وابدأ اللعب. فالمنافسة، استعمل أزرار كل لاعب اللي باينين فالشاشة.</p>
+                    </section>
+                </div>
+            `);
+        }
+
+        function focusGames() { document.getElementById('games')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        function chooseMode(mode) {
+            S.mode = mode;
+            S.wins = [0, 0, 0, 0];
+            S.points = [0, 0, 0, 0];
+            S.queue = [];
+            if (mode === 'solo') S.n = 1;
+            else if (mode === 'team') S.n = 4;
+            else if (!S.n || S.n < 2) S.n = 2;
+            menu();
+        }
+        function setPlayers(n) { S.n = n; S.wins = [0, 0, 0, 0]; S.points = [0, 0, 0, 0]; menu(); }
+        function modeDescription() {
+            return S.mode === 'team' ? 'فريقين، كل فريق فيه جوج لاعبين. لعبو الكرة، الدبابة، ولا خطف العلم.' : 'لاعب واحد ضد الكمبيوتر الذكي.';
+        }
+        function selectGame(id) {
+            const game = GAME_CATALOGUE.find(item => item.id === id);
+            if (S.mode === 'team' && ![0, 2, 9].includes(id)) { showNotice('هاد النمط كيدعم دابا كرة القدم والدبابة وخطف العلم 2 ضد 2.'); return; }
+            if (game.gameIndex !== undefined) {
+                if (S.mode === 'tour') S.queue = G.map((_, index) => index).filter(index => index !== game.gameIndex);
+                play(game.gameIndex);
+                return;
+            }
+            showNotice(`${game.icon} ${game.name}: ${game.description} هاد اللعبة غادي نزيدوها فالتحديثات الجاية.`);
+        }
+        function showNotice(message) {
+            scr(`<div class="info-panel"><h2>🎮 YASSINZN</h2><p>${message}</p><button class="b gr" onclick="menu()">رجوع</button></div>`);
+        }
+
+        function instructionsFor(i) {
+            const move = S.n > 1 && S.mode !== 'solo' ? 'فاللمس: كل لاعب يسحب فالمربع ديالو' : 'فاللمس: اسحب فمربع التحكم';
+            const keyboard = ' · PC: WASD / الأسهم / IJKL / numpad';
+            const map = {
+                0: ['حرّك اللاعب وخلي جسمك يضرب الكورة؛ سجّل 3 أهداف.', `${move} · اسحب فالاتجاه اللي بغيتي${keyboard}`],
+                1: ['بدّل بين 3 مسارات وتفادى السيارات؛ السرعة وكثافة السير كيزيدو تدريجياً.', `${move} · اسحب يمين ويسار${keyboard}`],
+                2: ['الدبابة كتدور بوحدها ملي كتوقف. شدّ زر النار باش تطلق وتندفع فالجهة اللي كتواجه.', `${move} · شدّ 🔥 باش تطلق وتتحرك${keyboard}`],
+                3: ['حرّك الصاروخ غير لليسار ولا لليمين وتفادى الحجارة اللي كتسرع.', `${move} · اسحب يمين ويسار${keyboard}`],
+                4: ['قفز فوق الحواجز المتحركة والثابتة؛ أي اصطدام كيقصيك من السباق.', `${move} · زر القفز ⬆️${keyboard}`],
+                5: ['حفظ 4 مكونات فـ5 ثواني، ومن بعد اختارهم من بين 10. أول طاجين صحيح كيربح.', `${move} · اختار المكونات واضغط تأكيد`],
+                6: ['خلي الحمامة تطير بتكرار الضغط على زر الطيران وتفادى الحواجز.', `${move} · ضغطة وحدة = رفرفة${keyboard}`],
+                7: ['سابق فطريق مستقيم طويل من 3 لفات؛ بدّل المسار، تفادى الحواجز واستعمل التيربو.', `${move} · اسحب يمين ويسار · ⚡ تيربو${keyboard}`],
+                8: ['سابق فالصحراء، بدّل المسار باش تفادى الكثبان. زر ⚡ كيعطيك سرعة.', `${move} · أزرار الاتجاه · ⚡ دفعة سرعة`],
+                9: ['خطف علم الخصم ورجعو لقاعدتك. الشخصية كتدور بوحدها؛ شدّ زر النار باش تتحرك فالجهة اللي كتواجه وتطلق على الخصم.', `${move} · وقف للتدوير · شدّ 🔥 للحركة وإطلاق النار${keyboard}`],
+                10: ['شطرنج بالقوانين الأساسية؛ ربح بالكش مات ضد الكمبيوتر أو لاعب آخر.', 'اللمس: اختار القطعة ثم المربع · الكمبيوتر: الأسهم و Enter/Space'],
+                11: ['الدّامة: كلّ على إجبارية، سلسلة القفزات، والترقية لملك.', 'اللمس: اختار القطعة ثم المربع · الكمبيوتر: الأسهم و Enter/Space'],
+                12: ['حلّ سودوكو منطقي؛ الأرقام ما خاصهاش تتكرر فالسطور والأعمدة والمربعات.', 'اللمس: اختار الخانة والرقم · الكمبيوتر: الأسهم والأرقام و H للمساعدة']
+            };
+            return map[i] || ['استمتع باللعب!', move];
+        }
+
+        function startGame(i) {
+            S.cur = i;
+            S.paused = false;
+            document.body.classList.add('playing');
+            document.body.classList.remove('home-screen');
+            scr(`
+                <div id="game-container">
+                    <div id="cv"></div>
+                    <div id="touch-overlay"></div>
+                    <div id="pause-banner" class="pause-banner" hidden>⏸️ وقفنا شوية</div>
+                </div>
+                <div class="row-btns" style="width:min(94vw,550px);margin-top:10px">
+                    <button id="pause-button" class="b blue pause-btn" onclick="togglePause()">⏸️ إيقاف مؤقت</button>
+                    <button class="b gr pause-btn" onclick="menu()">القائمة</button>
+                </div>
+            `);
+            document.getElementById('cv').append(gc);
+            const isBoardGame = i >= 10;
+            document.getElementById('game-container').classList.toggle('board-game', isBoardGame);
+            gc.width = isBoardGame ? 480 : 800;
+            gc.height = isBoardGame ? 480 : 450;
+            gc.style.touchAction = 'none';
+            setupTouchOverlay(S.n);
+            S.g = G[i].mk(S.n, S.mode);
+            last = performance.now();
+            cancelAnimationFrame(raf);
+            const loop = t => {
+                const dt = Math.min(.033, (t - last) / 1000);
+                last = t;
+                const g = S.g;
+                if (!S.paused && !g.done) g.update(dt);
+                g.draw();
+                if (g.done) {
+                    g.t2 = (g.t2 || 0) + dt;
+                    if (g.t2 > 1.2) { endScr(); return; }
+                }
+                raf = requestAnimationFrame(loop);
+            };
+            raf = requestAnimationFrame(loop);
+        }
+
+        function togglePause() {
+            if (!S.g || S.g.done) return;
+            S.paused = !S.paused;
+            clearInputs();
+            const button = document.getElementById('pause-button');
+            const banner = document.getElementById('pause-banner');
+            if (button) button.textContent = S.paused ? '▶️ كمّل اللعب' : '⏸️ إيقاف مؤقت';
+            if (banner) banner.hidden = !S.paused;
+        }
+
+        function go(m) { S.mode = m; S.wins = [0, 0, 0, 0]; S.points = [0, 0, 0, 0]; if (m == 'solo') { S.n = 1; pick() } else if (m == 'team') { S.n = 4; pick() } else cnt() }
+        function cnt() {
+            const title = S.mode === 'tour' ? 'شحال من لاعب فالبطولة؟' : 'شحال من لاعب؟';
+            scr(`<h2>${title}</h2><div class="menu-container">` + [2, 3, 4].map(n => `<button class="b y" onclick="S.n=${n};pick()">${n} لاعبين</button>`).join('') + `<p class="hint">كل لاعب عندو أزرار خاصة به. تقدروا تلعبوا كاملين فنفس الجهاز.</p>` + back + '</div>')
+        }
+
+        const G = [
+            { n: '⚽ كرة القدم', d: 'دوز الكورة وسجّل 3 أهداف قبل الخصم.', mk: football },
+            { n: '🚕 الطاكسي', d: 'بدّل المسار وتفادى السيارات فالطريق.', mk: taxi },
+            { n: '🛡️ الدبابة', d: 'تحرك وسط الحواجز، طلق على الخصم وحافظ على 3 قلوبك.', mk: tank },
+            { n: '🚀 الصاروخ', d: 'طلع فالسما وتفادى الحجارة.', mk: rocket },
+            { n: '🐑 الخروف', d: 'نقز فوق الحواجز وجمع النقط.', mk: sheep },
+            { n: '🍲 الطاجين', d: 'جمع الخضرة قبل ما يسالي الوقت.', mk: tagine },
+            { n: '🕊️ الحمام', d: 'طير بحال Flappy وتفادى العوائق.', mk: pigeon },
+            { n: '🛵 السكوتر', d: 'سابق فمسار ديال 3 لفات، بدّل المسار واستعمل التيربو.', mk: scooter },
+            { n: '🐪 الجمل', d: 'سباق صحراوي حتى لخط النهاية: بدّل المسار، نقز على الكثبان، ودبّر الطاقة.', mk: camel },
+            { n: '🇲🇦 العلم', d: 'خطف علم الفريق المنافس ورجعو لقاعدتك.', mk: flag },
+            { n: '♟️ الشطرنج', d: 'خطّط للملك، احمي القطع، وربح بالكش مات.', mk: chess },
+            { n: '🔴 الدّامة', d: 'كلّ على إجبارية، سلاسل وترقية لملك.', mk: checkers },
+            { n: '🔢 سودوكو', d: 'حلّ شبكة الأرقام باستنتاجات منطقية.', mk: sudoku }
+        ];
+        const GAME_CATALOGUE = [
+            { id: 0, name: 'كرة القدم', icon: '⚽', gameIndex: 0, description: 'سجّل الأهداف قبل الخصم.' },
+            { id: 1, name: 'الطاكسي', icon: '🚕', gameIndex: 1, description: 'سابق فالزنقة وتفادى السيارات.' },
+            { id: 2, name: 'الدبابة', icon: '🛡️', gameIndex: 2, description: 'حارب الدبابات فالساحة.' },
+            { id: 3, name: 'الصاروخ', icon: '🚀', gameIndex: 3, description: 'حلّق وتفادى الحجارة.' },
+            { id: 4, name: 'الخروف', icon: '🐑', gameIndex: 4, description: 'نطّ فوق الحواجز بأجواء العيد.' },
+            { id: 5, name: 'الطاجين', icon: '🍲', gameIndex: 5, description: 'جمع الخضرة قبل ما يسالي الوقت.' },
+            { id: 6, name: 'الحمام', icon: '🕊️', gameIndex: 6, description: 'طير وتفادى العوائق.' },
+            { id: 7, name: 'السكوتر', icon: '🛵', gameIndex: 7, description: 'طريق مستقيم طويل من 3 لفات، مسارات وحواجز وتيربو.' },
+            { id: 8, name: 'الجمل', icon: '🐪', gameIndex: 8, description: 'سباق صحراوي حتى لخط النهاية، مع القفز وتدبير الطاقة.' },
+            { id: 9, name: 'العلم', icon: '🇲🇦', gameIndex: 9, description: 'خطف علم الفريق المنافس.' },
+            { id: 10, name: 'الشطرنج', icon: '♟️', gameIndex: 10, description: 'شطرنج ضد AI أو لاعب آخر.' },
+            { id: 11, name: 'الدّامة', icon: '🔴', gameIndex: 11, description: 'قفزات إجبارية، سلاسل وترقية للملك.' },
+            { id: 12, name: 'سودوكو', icon: '🔢', gameIndex: 12, description: 'ألغاز منطقية جديدة فكل مرة.' }
+        ];
+
+        function pick() {
+            if (S.mode == 'tour') { S.queue = [0, 1, 2]; next(); return }
+            scr(`<h2>اختار اللعبة</h2><div class="menu-container">` + G.map((g, i) => `<button class="b r game-card" onclick="play(${i})">${g.n}<small>${g.d}</small></button>`).join('') + `<div class="info-panel"><strong>التحكم فالكيبورد</strong><div class="control-list"><span>لاعب 1: W A S D + Space</span><span>لاعب 2: الأسهم + Enter</span><span>لاعب 3: I J K L + H</span><span>لاعب 4: 8 4 5 6 + 0</span></div><p class="hint">فالتليفون استعمل أزرار اللمس اللي باينين فوق اللعبة.</p></div>` + back + '</div>');
+        }
+
+        function shop() {
+            cancelAnimationFrame(raf);
+            document.body.classList.remove('playing');
+            document.body.classList.remove('home-screen');
+            scr(`<h2>🛒 المتجر</h2><div class="info-panel"><p>المتجر غير متوفر دابا. هادي نسخة تجريبية ديال الألعاب، وما كاين حتى شراء حقيقي.</p><p class="hint">غادي نزيدو الأزياء والنقط من بعد.</p></div>${back}`);
+        }
+
+        function toggleSound() {
+            S.soundOff = !S.soundOff;
+            try { localStorage.setItem('yassinzn-sound', S.soundOff ? 'off' : 'on'); } catch (error) { console.warn('Settings storage unavailable:', error); }
+            settings();
+        }
+
+        function settings() {
+            cancelAnimationFrame(raf);
+            document.body.classList.remove('playing');
+            document.body.classList.remove('home-screen');
+            scr(`<h2>⚙️ الإعدادات</h2><div class="info-panel"><p>🎮 التحكم فالكمبيوتر:</p><div class="control-list"><span>لاعب 1: W A S D + Space</span><span>لاعب 2: الأسهم + Enter</span><span>لاعب 3: I J K L + H</span><span>لاعب 4: 8 4 5 6 + 0</span></div><p>🔊 صوت اللعبة: ${S.soundOff ? 'موقوف' : 'مفعّل'}</p><button class="b blue" onclick="toggleSound()">${S.soundOff ? 'تشغيل الصوت' : 'إيقاف الصوت'}</button><p>جرّب أصوات النتيجة:</p><div class="row-btns"><button class="b gr" onclick="playResultSound('win')">🏆 ربح</button><button class="b r" onclick="playResultSound('loss')">😢 خسارة</button><button class="b y" onclick="playResultSound('draw')">🤝 تعادل</button></div><button class="b blue" onclick="playSound('CLICK','click1.mp3.mp3',.7)">🔔 جرّب صوت الزر</button></div>${back}`);
+        }
+
+        function next() { play(S.queue.shift()) }
+
+        function play(i) {
+            S.cur = i;
+            cancelAnimationFrame(raf);
+            clearInputs();
+            document.body.classList.remove('home-screen');
+            const [description, controls] = instructionsFor(i);
+            const names = S.mode === 'team' ? '4 لاعبين — فريقين، كل فريق فيه جوج' : S.mode === 'solo' ? 'لاعب واحد ضد الكمبيوتر' : `${S.n} لاعبين`;
+            const humanCount = S.mode === 'solo' ? 1 : S.mode === 'team' ? 4 : S.n;
+            const roster = Array.from({ length: humanCount }, (_, player) => {
+                const character = characterFor(player);
+                return `<div class="roster-card" style="--character-color:${character.color}"><div class="roster-avatar">${character.icon}</div><div><span class="roster-name">${playerName(player)} · لاعب ${player + 1}</span><small class="roster-kit">${character.kit}</small></div><div class="roster-switch"><button class="b blue" onclick="cycleCharacter(${player},-1)" aria-label="الشخصية السابقة">◀</button><button class="b y" onclick="cycleCharacter(${player},1)" aria-label="الشخصية التالية">▶</button></div></div>`;
+            }).join('');
+            scr(`
+                <div class="ready-card">
+                    <div class="ready-icon">${GAME_CATALOGUE[i]?.icon || '🎮'}</div>
+                    <h2 class="ready-title">${G[i].n}</h2>
+                    <p class="ready-description">${description}</p>
+                    <div class="ready-controls"><span class="control-chip">👥 ${names}</span><span class="control-chip">🎮 ${controls}</span></div>
+                    <h3 class="roster-title">اختار شخصية كل لاعب</h3>
+                    <div class="roster-grid">${roster}</div>
+                    <button class="b y ready-start" onclick="startGame(${i})">يلا نلعبو! ▶</button>
+                    <button class="b gr" onclick="menu()" style="margin:14px auto 0">رجوع</button>
+                </div>
+            `);
+        }
+
+        function setupTouchOverlay(n) {
+            clearInputs();
+            const ov = document.getElementById('touch-overlay');
+            if (!ov) return;
+            if (S.cur >= 10) { ov.style.display = 'none'; ov.innerHTML = ''; return; }
+            ov.classList.add('button-controls');
+            ov.classList.toggle('compact-controls', n > 1);
+            ov.style.display = 'block';
+            ov.innerHTML = '';
+
+            const posClasses = ['p0-pad', 'p1-pad', 'p2-pad', 'p3-pad'];
+            const horizontalOnly = [1, 3, 7].includes(S.cur);
+            const actionOnly = [2, 4, 6, 9].includes(S.cur);
+            const actionLabels = {
+                2: ['🔥', 'إطلاق النار'], 4: ['⬆️', 'قفز'], 5: ['✓', 'تأكيد'],
+                6: ['🐦', 'طيران'], 7: ['⚡', 'تيربو'], 8: ['⚡', 'سرعة'], 9: ['🔥', 'هجوم']
+            };
+            for (let i = 0; i < n; i++) {
+                const pad = document.createElement('div');
+                pad.className = `t-pad ${posClasses[i]}`;
+                pad.classList.toggle('single-action', actionOnly);
+                if (!actionOnly) pad.innerHTML = `<div class="gesture-pad" data-p="${i}" role="application" aria-label="تحكم بالسحب للاعب ${i + 1}">${horizontalOnly ? 'اسحب يمين / يسار' : 'اسحب للتحرك'}</div>`;
+                const action = actionLabels[S.cur];
+                if (action) pad.innerHTML += `<button class="touch-key" data-p="${i}" data-key="action" aria-label="${action[1]} اللاعب ${i + 1}" title="${action[1]}">${action[0]}</button>`;
+                ov.appendChild(pad);
+            }
+
+            const gesturePads = [...ov.querySelectorAll('.gesture-pad')];
+            const releaseGesture = (gesturePad, pointerId) => {
+                touchGestures[Number(gesturePad.dataset.p)].delete(pointerId);
+                if (touchGestures[Number(gesturePad.dataset.p)].size === 0) gesturePad.classList.remove('active');
+            };
+            gesturePads.forEach(gesturePad => {
+                const player = Number(gesturePad.dataset.p);
+                const updateGesture = event => {
+                    const rect = gesturePad.getBoundingClientRect();
+                    const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 2;
+                    const radius = Math.max(24, Math.min(rect.width, rect.height) * .38);
+                    let dx = (event.clientX - cx) / radius, dy = (event.clientY - cy) / radius;
+                    if (matchMedia('(orientation: portrait) and (max-width: 900px)').matches) [dx, dy] = [dy, -dx];
+                    const magnitude = Math.hypot(dx, dy);
+                    if (magnitude < .18) { dx = 0; dy = 0; }
+                    else if (magnitude > 1) { dx /= magnitude; dy /= magnitude; }
+                    if (horizontalOnly) dy = 0;
+                    touchGestures[player].set(event.pointerId, { dx, dy });
+                };
+                gesturePad.addEventListener('pointerdown', event => {
+                    event.preventDefault();
+                    gesturePad.classList.add('active');
+                    try { gesturePad.setPointerCapture(event.pointerId); } catch { /* Continue with available pointer events. */ }
+                    updateGesture(event);
+                });
+                gesturePad.addEventListener('pointermove', event => {
+                    if (touchGestures[player].has(event.pointerId)) updateGesture(event);
+                });
+                gesturePad.addEventListener('pointerup', event => releaseGesture(gesturePad, event.pointerId));
+                gesturePad.addEventListener('pointercancel', event => releaseGesture(gesturePad, event.pointerId));
+                gesturePad.addEventListener('lostpointercapture', event => releaseGesture(gesturePad, event.pointerId));
+            });
+
+            const releaseButton = (button, pointerId) => {
+                const p = Number(button.dataset.p), key = button.dataset.key;
+                touchButtons[p][key].delete(pointerId);
+                if (key === 'action') touchState[p].actions.delete(pointerId);
+                button.classList.toggle('pressed', touchButtons[p][key].size > 0);
+            };
+            ov.querySelectorAll('.touch-key').forEach(button => {
+                const p = Number(button.dataset.p), key = button.dataset.key;
+                button.addEventListener('pointerdown', e => {
+                    e.preventDefault();
+                    touchButtons[p][key].add(e.pointerId);
+                    if (key === 'action') touchState[p].actions.add(e.pointerId);
+                    button.classList.add('pressed');
+                    try { button.setPointerCapture(e.pointerId); } catch { /* The global release handler remains a fallback. */ }
+                });
+                button.addEventListener('pointerup', e => releaseButton(button, e.pointerId));
+                button.addEventListener('pointercancel', e => releaseButton(button, e.pointerId));
+                button.addEventListener('lostpointercapture', e => releaseButton(button, e.pointerId));
+            });
+        }
+
+        function recordMatchRewards(g) {
+            if (g.rewardsApplied) return { coins: 0, xp: 0, levelUp: false };
+            g.rewardsApplied = true;
+            const result = gameOutcome(g), players = S.mode === 'solo' ? 1 : S.mode === 'team' ? 4 : S.n;
+            const winners = new Set(g.win || []), isDraw = result === 'draw';
+            for (let i = 0; i < players; i++) {
+                const stat = S.profile.playerStats[i] || { matches: 0, wins: 0, points: 0 };
+                stat.matches++;
+                if (winners.has(i)) { stat.wins++; stat.points += 3; S.points[i]++; }
+                else if (isDraw) { stat.points++; S.points[i]++; }
+                S.profile.playerStats[i] = stat;
+            }
+            const won = winners.has(0), coins = isDraw ? 15 : won ? 30 : 5, xp = isDraw ? 20 : won ? 50 : 10;
+            const oldLevel = S.profile.level;
+            S.profile.matches++;
+            if (won) S.profile.wins++;
+            S.profile.coins += coins; S.profile.xp += xp; refreshLevel(); saveProfile();
+            return { coins, xp, levelUp: S.profile.level > oldLevel, result, players, isDraw };
+        }
+
+        function endScr() {
+            const g = S.g, tour = S.mode == 'tour';
+            if (!g.soundPlayed) { playResultSound(gameOutcome(g)); g.soundPlayed = true; }
+            const reward = recordMatchRewards(g);
+            (g.win || []).forEach(i => { S.wins[i]++; });
+            const standings = Array.from({ length: reward.players }, (_, i) => ({ i, points: S.profile.playerStats[i]?.points || 0, wins: S.profile.playerStats[i]?.wins || 0 }))
+                .sort((a, b) => b.points - a.points || b.wins - a.wins);
+            const resultRows = standings.map((row, rank) => `<p style="color:${playerColor(row.i)};margin:4px 0">${rank + 1}. ${playerName(row.i)} — ${row.points} نقطة · ${row.wins} فوز</p>`).join('');
+            const progress = `<div class="info-panel"><div class="progress-chip"><span>🪙 +${reward.coins}</span><span>⭐ +${reward.xp} XP</span><span>المستوى ${S.profile.level}</span></div><p>الرصيد: ${S.profile.coins} قطعة · ${S.profile.xp % 100}/100 XP${reward.levelUp ? ' · 🎉 طلعت مستوى جديد!' : ''}</p><hr>${resultRows}</div>`;
+            scr(`<h2>${g.msg}</h2>${progress}<div class="menu-container">` + (tour ? (S.queue.length ? '<button class="b y" onclick="next()">اللعبة الجاية</button>' : '<button class="b y" onclick="fin()">النتيجة النهائية</button>') : `<button class="b y" onclick="play(${S.cur})">عاود</button>`) + '<button class="b gr" onclick="menu()">القائمة</button></div>')
+        }
+
+        function fin() {
+            const s = S.wins.slice(0, S.n).map((w, i) => [w, i]).sort((a, b) => b[0] - a[0]);
+            scr('<h2>🏆 نتيجة البطولة</h2><div class="menu-container">' + s.map(([w, i]) => `<p style="color:${playerColor(i)}">${playerName(i)}: ${w} انتصارات · ${S.points[i]} نقط</p>`).join('') + '<button class="b gr" onclick="menu()">القائمة</button></div>');
+        }
+
+        function txt(t, px, py, sz, col) { x.font = `900 ${sz}px Cairo,Tahoma,sans-serif`; x.textAlign = 'center'; x.fillStyle = col || '#fff'; x.strokeStyle = '#0008'; x.lineWidth = 4; x.strokeText(t, px, py); x.fillText(t, px, py) }
+
+        /* 1. كرة القدم */
+        function football(n) {
+            const ai = n == 1, tot = ai ? 2 : n, P = [], b = { x: 400, y: 225, vx: 0, vy: 0, spin: 0 }, sc = [0, 0];
+            for (let i = 0; i < tot; i++) { const t = i % 2; P.push({ sx: t ? 600 : 200, sy: tot > 2 ? (i >> 1 ? 300 : 150) : 225, t, i, ai: ai && i == 1, vx: 0, vy: 0 }) }
+            const rst = () => { b.x = 400; b.y = 225; b.vx = b.vy = 0; P.forEach(p => { p.x = p.sx; p.y = p.sy }) }; rst();
+            const g = {
+                done: false, win: [], msg: '',
+                update(dt) {
+                    for (const p of P) {
+                        let dx, dy; if (p.ai) { const ex = b.x - p.x, ey = b.y - p.y, d = Math.hypot(ex, ey) || 1; dx = ex / d * .65; dy = ey / d * .65 } else { const k = inp(p.i); dx = k.dx; dy = k.dy; if (dx && dy) { dx *= .71; dy *= .71 } }
+                        p.vx = dx * 200; p.vy = dy * 200; p.x = Math.max(16, Math.min(784, p.x + p.vx * dt)); p.y = Math.max(16, Math.min(434, p.y + p.vy * dt));
+                        const ex = b.x - p.x, ey = b.y - p.y, d = Math.hypot(ex, ey); if (d < 26 && d > 0) { const nx = ex / d, ny = ey / d; b.x = p.x + nx * 26; b.y = p.y + ny * 26; b.vx = nx * 340 + p.vx * .5; b.vy = ny * 340 + p.vy * .5 }
+                    }
+                    const travel = Math.hypot(b.vx * dt, b.vy * dt), steps = Math.max(1, Math.ceil(travel / 5));
+                    for (let step = 0; step < steps; step++) {
+                        b.x += b.vx * dt / steps; b.y += b.vy * dt / steps;
+                        for (const p of P) {
+                            const dx = b.x - p.x, dy = b.y - p.y, distance = Math.hypot(dx, dy);
+                            if (distance >= 26) continue;
+                            const nx = distance > .001 ? dx / distance : (b.vx ? Math.sign(b.vx) : 1), ny = distance > .001 ? dy / distance : 0;
+                            b.x = p.x + nx * 26; b.y = p.y + ny * 26;
+                            const approach = b.vx * nx + b.vy * ny;
+                            if (approach < 0) { b.vx -= 1.75 * approach * nx; b.vy -= 1.75 * approach * ny; }
+                            b.vx += p.vx * .35; b.vy += p.vy * .35;
+                        }
+                    }
+                    b.spin += Math.hypot(b.vx, b.vy) * dt / 10;
+                    const f = Math.pow(.45, dt); b.vx *= f; b.vy *= f;
+                    if (b.y < 10) { b.y = 10; b.vy *= -1 } if (b.y > 440) { b.y = 440; b.vy *= -1 }
+                    const gap = b.y > 165 && b.y < 285;
+                    if (b.x < 10 && !gap) { b.x = 10; b.vx = Math.abs(b.vx); }
+                    if (b.x > 790 && !gap) { b.x = 790; b.vx = -Math.abs(b.vx); }
+                    if (b.x < 0 && gap) { sc[1]++; rst(); }
+                    else if (b.x > 800 && gap) { sc[0]++; rst(); }
+                    for (let t = 0; t < 2; t++)if (sc[t] >= 3) { g.done = true; g.outcome = ai && t === 1 ? 'loss' : 'win'; g.win = P.filter(p => p.t == t && !p.ai).map(p => p.i); g.msg = ai && t == 1 ? 'خسرتي، عاود جرب' : 'فاز الفريق ' + TN[t] }
+                },
+                draw() {
+                    x.fillStyle = '#2e8b3e'; x.fillRect(0, 0, 800, 450); x.strokeStyle = '#fffb'; x.lineWidth = 3; x.strokeRect(10, 10, 780, 430); x.beginPath(); x.moveTo(400, 10); x.lineTo(400, 440); x.stroke(); x.beginPath(); x.arc(400, 225, 55, 0, 7); x.stroke();
+                    for (const side of [0, 1]) {
+                        const gx = side ? 766 : 10, inward = side ? -1 : 1;
+                        x.fillStyle = '#083b20'; x.fillRect(side ? 778 : 0, 165, 22, 120);
+                        x.strokeStyle = '#f8fafc'; x.lineWidth = 5; x.beginPath();
+                        x.moveTo(gx + (side ? 0 : 24), 165); x.lineTo(gx + (side ? 0 : 24), 285);
+                        x.moveTo(gx, 165); x.lineTo(gx + 24, 165); x.moveTo(gx, 285); x.lineTo(gx + 24, 285); x.stroke();
+                        x.strokeStyle = '#ffffff88'; x.lineWidth = 1.5;
+                        for (let gy = 180; gy < 285; gy += 15) { x.beginPath(); x.moveTo(gx, gy); x.lineTo(gx + inward * 24, gy); x.stroke(); }
+                        for (let gx2 = 4; gx2 < 24; gx2 += 8) { x.beginPath(); x.moveTo(side ? 766 + gx2 : gx2, 165); x.lineTo(side ? 766 + gx2 : gx2, 285); x.stroke(); }
+                    }
+                    for (const p of P) { x.fillStyle = p.ai ? TC[p.t] : playerColor(p.i); x.strokeStyle = '#fff'; x.lineWidth = 3; x.beginPath(); x.arc(p.x, p.y, 16, 0, 7); x.fill(); x.stroke(); txt(p.ai ? '🤖' : playerName(p.i), p.x, p.y + 6, 12) }
+                    x.fillStyle = '#0005'; x.beginPath(); x.ellipse(b.x + 3, b.y + 7, 11, 6, 0, 0, Math.PI * 2); x.fill();
+                    x.save(); x.translate(b.x, b.y); x.rotate(b.spin);
+                    const ballShade = x.createRadialGradient(-4, -5, 1, 0, 0, 11);
+                    ballShade.addColorStop(0, '#ffffff'); ballShade.addColorStop(.72, '#f4f4ed'); ballShade.addColorStop(1, '#9ca3a0');
+                    x.fillStyle = ballShade; x.strokeStyle = '#17202a'; x.lineWidth = 1.5; x.beginPath(); x.arc(0, 0, 10, 0, Math.PI * 2); x.fill(); x.stroke();
+                    x.fillStyle = '#17202a'; x.beginPath(); x.arc(0, 0, 3.2, 0, Math.PI * 2); x.fill();
+                    for (let seam = 0; seam < 5; seam++) {
+                        const angle = seam * Math.PI * 2 / 5;
+                        x.beginPath(); x.moveTo(Math.cos(angle) * 3, Math.sin(angle) * 3); x.lineTo(Math.cos(angle + .42) * 9, Math.sin(angle + .42) * 9); x.stroke();
+                    }
+                    x.restore();
+                    txt(sc[0] + ' 🔴  —  🟢 ' + sc[1], 400, 44, 30)
+                }
+            }; return g
+        }
+
+        /* 2. الدبابة */
+        function tank(n, mode) {
+            const ai = n === 1, total = ai ? 2 : n, starts = [[60, 60], [740, 390], [740, 60], [60, 390]];
+            const tanks = [], bullets = [], walls = [[360, 150, 80, 20], [360, 280, 80, 20], [190, 205, 20, 40], [590, 205, 20, 40]];
+            for (let i = 0; i < total; i++) tanks.push({ x: starts[i][0], y: starts[i][1], angle: i % 2 ? Math.PI : 0, hp: 3, cd: 0, i, team: mode === 'team' ? i % 2 : i, ai: ai && i === 1, fire: false, think: 0 });
+            const wallAt = (px, py, radius = 14) => walls.some(w => px + radius > w[0] && px - radius < w[0] + w[2] && py + radius > w[1] && py - radius < w[1] + w[3]);
+            const g = {
+                done: false, win: [], msg: '',
+                update(dt) {
+                    for (const tank of tanks) {
+                        if (tank.hp <= 0) continue;
+                        tank.cd = Math.max(0, tank.cd - dt);
+                        let moving = false, shooting = false;
+                        if (tank.ai) {
+                            const target = tanks.find(other => other.team !== tank.team && other.hp > 0);
+                            if (target) {
+                                const targetAngle = Math.atan2(target.y - tank.y, target.x - tank.x);
+                                const difference = Math.atan2(Math.sin(targetAngle - tank.angle), Math.cos(targetAngle - tank.angle));
+                                tank.angle += Math.sign(difference) * Math.min(Math.abs(difference), 2.2 * dt);
+                                tank.think -= dt;
+                                if (tank.think <= 0) { tank.think = .22; tank.fire = Math.abs(difference) < .24 || Math.random() < .12; }
+                                moving = tank.fire && Math.abs(difference) < .55;
+                                shooting = tank.fire && Math.abs(difference) < .22;
+                            }
+                        } else {
+                            const input = inp(tank.i); moving = input.a; shooting = input.a;
+                            if (!moving) tank.angle += 1.65 * dt;
+                        }
+                        if (moving) {
+                            const nx = tank.x + Math.cos(tank.angle) * 90 * dt, ny = tank.y + Math.sin(tank.angle) * 90 * dt;
+                            if (nx > 18 && nx < 782 && !wallAt(nx, tank.y)) tank.x = nx;
+                            if (ny > 18 && ny < 432 && !wallAt(tank.x, ny)) tank.y = ny;
+                        }
+                        if (shooting && tank.cd <= 0) {
+                            tank.cd = .62;
+                            bullets.push({ x: tank.x + Math.cos(tank.angle) * 19, y: tank.y + Math.sin(tank.angle) * 19, vx: Math.cos(tank.angle) * 320, vy: Math.sin(tank.angle) * 320, team: tank.team, ricochets: 1 });
+                        }
+                    }
+                    for (let i = bullets.length - 1; i >= 0; i--) {
+                        const bullet = bullets[i], nx = bullet.x + bullet.vx * dt, ny = bullet.y + bullet.vy * dt;
+                        const wall = walls.find(w => nx >= w[0] - 4 && nx <= w[0] + w[2] + 4 && ny >= w[1] - 4 && ny <= w[1] + w[3] + 4);
+                        let remove = false;
+                        if (wall && bullet.ricochets > 0) {
+                            if (bullet.x <= wall[0] || bullet.x >= wall[0] + wall[2]) bullet.vx *= -1; else bullet.vy *= -1;
+                            bullet.ricochets--; bullet.x += bullet.vx * dt; bullet.y += bullet.vy * dt;
+                        } else if (wall) remove = true;
+                        else { bullet.x = nx; bullet.y = ny; }
+                        if (bullet.x < 0 || bullet.x > 800 || bullet.y < 0 || bullet.y > 450) remove = true;
+                        for (const target of tanks) if (target.hp > 0 && target.team !== bullet.team && Math.hypot(target.x - bullet.x, target.y - bullet.y) < 19) { target.hp--; remove = true; }
+                        if (remove) bullets.splice(i, 1);
+                    }
+                    const aliveTeams = [...new Set(tanks.filter(t => t.hp > 0).map(t => t.team))];
+                    if (aliveTeams.length < 2) {
+                        g.done = true;
+                        if (!aliveTeams.length) { g.outcome = 'draw'; g.msg = 'تعادل فالدبابة!'; }
+                        else { const survivors = tanks.filter(t => t.team === aliveTeams[0]); g.win = survivors.filter(t => !t.ai).map(t => t.i); g.outcome = ai && survivors[0].ai ? 'loss' : 'win'; g.msg = ai && survivors[0].ai ? 'الدبابة ديال الكمبيوتر ربحات!' : `ربح ${playerName(survivors[0].i)} الدبابة!`; }
+                    }
+                },
+                draw() {
+                    x.fillStyle = '#d9b36c'; x.fillRect(0, 0, 800, 450); x.strokeStyle = '#fff8'; x.lineWidth = 4; x.strokeRect(8, 8, 784, 434);
+                    for (const wall of walls) { x.fillStyle = '#6e422b'; x.fillRect(...wall); x.strokeStyle = '#f0d091'; x.lineWidth = 2; x.strokeRect(...wall); }
+                    for (const tank of tanks) {
+                        if (tank.hp <= 0) continue;
+                        x.save(); x.translate(tank.x, tank.y); x.rotate(tank.angle);
+                        x.fillStyle = tank.ai ? C[tank.i] : playerColor(tank.i); x.strokeStyle = '#fff'; x.lineWidth = 2.5; x.fillRect(-13, -12, 26, 24); x.strokeRect(-13, -12, 26, 24);
+                        x.fillStyle = '#343434'; x.fillRect(0, -4, 22, 8); x.restore();
+                        txt('♥'.repeat(tank.hp), tank.x, tank.y - 20, 12, '#a91e1e');
+                        if (!tank.ai) txt(playerName(tank.i), tank.x, tank.y + 27, 11);
+                    }
+                    for (const bullet of bullets) { x.fillStyle = '#23170e'; x.beginPath(); x.arc(bullet.x, bullet.y, 5, 0, Math.PI * 2); x.fill(); x.strokeStyle = '#fff8'; x.stroke(); }
+                    txt('شدّ زر 🔥 باش تمشي وتطلق · وقف باش تدوّر وتوجّه', 400, 26, 18);
+                }
+            }; return g
+        }
+
+        /* 3. سباق الطاكسي */
+        function taxi(n, mode) {
+            const ai = mode === 'solo', total = ai ? 2 : n, players = [], traffic = [];
+            let spawn = 0, elapsed = 0;
+            for (let i = 0; i < total; i++) players.push({ i, lane: 1, alive: true, score: 0, moveCd: 0, ai: ai && i === 1 });
+            const g = {
+                done: false, win: [], msg: '',
+                update(dt) {
+                    elapsed += dt; spawn -= dt;
+                    if (spawn <= 0) {
+                        spawn = Math.max(.48, 1.45 - elapsed * .018);
+                        players.forEach(p => {
+                            if (!p.alive) return;
+                            traffic.push({ p: p.i, lane: Math.floor(Math.random() * 3), y: -35, speed: 210 + Math.min(190, elapsed * 5) });
+                            if (elapsed > 12 && Math.random() < Math.min(.62, (elapsed - 12) * .025))
+                                traffic.push({ p: p.i, lane: Math.floor(Math.random() * 3), y: -105, speed: 230 + Math.min(190, elapsed * 5) });
+                        });
+                    }
+                    for (const car of traffic) car.y += car.speed * dt;
+                    for (const p of players) {
+                        if (!p.alive) continue;
+                        p.moveCd -= dt;
+                        if (p.ai) {
+                            const danger = traffic.some(car => car.p === p.i && car.lane === p.lane && car.y > 250 && car.y < 410);
+                            if (danger && p.moveCd <= 0) { const free = [0, 1, 2].find(lane => !traffic.some(car => car.p === p.i && car.lane === lane && car.y > 250 && car.y < 410)); if (free !== undefined) p.lane = free; p.moveCd = .24; }
+                        } else if (p.moveCd <= 0) {
+                            const direction = inp(p.i).dx;
+                            if (direction) { p.lane = Math.max(0, Math.min(2, p.lane + direction)); p.moveCd = .17; }
+                        }
+                        if (traffic.some(car => car.p === p.i && car.lane === p.lane && car.y > 337 && car.y < 405)) p.alive = false;
+                    }
+                    for (let i = traffic.length - 1; i >= 0; i--) if (traffic[i].y > 470) { if (players[traffic[i].p]?.alive) players[traffic[i].p].score++; traffic.splice(i, 1); }
+                    if (elapsed >= 35 || players.every(p => !p.alive)) {
+                        g.done = true;
+                        const contenders = players.some(p => p.alive) ? players.filter(p => p.alive) : players;
+                        const best = Math.max(...contenders.map(p => p.score));
+                        const leaders = contenders.filter(p => p.score === best);
+                        const winners = leaders.filter(p => p.alive);
+                        if (!winners.length && best > 0) winners.push(...leaders);
+                        g.win = winners.filter(p => !p.ai).map(p => p.i);
+                        g.outcome = leaders.length > 1 ? 'draw' : ai ? (g.win.includes(0) ? 'win' : 'loss') : 'win';
+                        g.msg = leaders.length > 1 ? `تعادل فسباق الطاكسي! أحسن نتيجة: ${best}` : ai ? (g.win.includes(0) ? `ربحتي سباق الطاكسي! ${players[0].score} نقطة` : `الكمبيوتر سبقك! نتيجتك ${players[0].score}`) : `نهاية السباق — أحسن نتيجة: ${best}`;
+                    }
+                },
+                draw() {
+                    x.fillStyle = '#343b49'; x.fillRect(0, 0, 800, 450);
+                    const trackW = 800 / total;
+                    players.forEach(p => {
+                        const left = p.i * trackW;
+                        x.fillStyle = '#252a35'; x.fillRect(left + 5, 0, trackW - 10, 450);
+                        x.strokeStyle = '#ffffff88'; x.setLineDash([18, 18]); x.lineWidth = 3;
+                        for (let lane = 1; lane <= 2; lane++) { x.beginPath(); x.moveTo(left + trackW * lane / 3, 0); x.lineTo(left + trackW * lane / 3, 450); x.stroke(); }
+                        x.setLineDash([]);
+                        x.fillStyle = p.alive ? (p.ai ? C[p.i % C.length] : playerColor(p.i)) : '#777';
+                        txt(p.ai ? '🤖 AI' : `${playerName(p.i)} · ${p.score}`, left + trackW / 2, 32, 13, '#fff');
+                        const carX = left + trackW * (p.lane + .5) / 3;
+                        if (p.alive) { x.fillStyle = '#ffca28'; x.fillRect(carX - 15, 350, 30, 48); x.fillStyle = '#b3e5fc'; x.fillRect(carX - 10, 356, 20, 12); x.fillStyle = '#111'; x.fillRect(carX - 18, 357, 4, 12); x.fillRect(carX + 14, 357, 4, 12); }
+                        else txt('💥', carX, 384, 28);
+                    });
+                    for (const car of traffic) { const left = car.p * trackW, cx = left + trackW * (car.lane + .5) / 3; x.fillStyle = '#d74343'; x.fillRect(cx - 13, car.y, 26, 38); x.fillStyle = '#b3e5fc'; x.fillRect(cx - 9, car.y + 5, 18, 10); }
+                    txt(`⏱ ${Math.max(0, 35 - Math.floor(elapsed))}`, 400, 28, 23);
+                }
+            };
+            return g;
+        }
+
+        /* 4. الصاروخ */
+        function rocket(n, mode) {
+            const ai = mode === 'solo', total = ai ? 2 : n, players = [], rocks = [];
+            let spawn = 0, elapsed = 0;
+            for (let i = 0; i < total; i++) players.push({ i, x: 180 + i * (440 / Math.max(1, total - 1)), y: 350, alive: true, score: 0, ai: ai && i === 1 });
+            const g = {
+                done: false, win: [], msg: '',
+                update(dt) {
+                    elapsed += dt; spawn -= dt;
+                    if (spawn <= 0) { spawn = Math.max(.82, 1.2 - elapsed * .004); rocks.push({ x: 25 + Math.random() * 750, y: -25, r: 11 + Math.random() * 15, speed: 145 + Math.random() * 65 + elapsed * 1.5 }); }
+                    for (const rock of rocks) rock.y += rock.speed * dt;
+                    for (const p of players) {
+                        if (!p.alive) continue;
+                        if (p.ai) {
+                            const threat = rocks.find(r => Math.abs(r.x - p.x) < r.r + 30 && r.y > p.y - 80 && r.y < p.y + 45);
+                            if (threat) p.x += (p.x < 400 ? -1 : 1) * 190 * dt;
+                            else p.x += Math.sin(elapsed * 1.7 + p.i) * 80 * dt;
+                        } else { const k = inp(p.i); p.x += k.dx * 230 * dt; p.y = 350; }
+                        p.x = Math.max(20, Math.min(780, p.x)); p.y = Math.max(70, Math.min(410, p.y));
+                        if (rocks.some(r => Math.hypot(r.x - p.x, r.y - p.y) < r.r + 13)) p.alive = false;
+                        else p.score = Math.floor(elapsed * 10);
+                    }
+                    for (let i = rocks.length - 1; i >= 0; i--) if (rocks[i].y > 470) rocks.splice(i, 1);
+                    if (elapsed >= 35 || players.every(p => !p.alive)) {
+                        g.done = true;
+                        const best = Math.max(...players.map(p => p.score));
+                        const leaders = players.filter(p => p.score === best);
+                        g.win = leaders.filter(p => !p.ai).map(p => p.i);
+                        g.outcome = leaders.length > 1 ? 'draw' : ai ? (g.win.includes(0) ? 'win' : 'loss') : 'win';
+                        g.msg = leaders.length > 1 ? `تعادل فالرحلة! ${best} نقطة` : ai ? (g.win.includes(0) ? `وصلتي لأعلى! ${best} نقطة` : 'الصاروخ ديالك تحطم، الكمبيوتر ربح!') : `نهاية الرحلة — ${best} نقطة`;
+                    }
+                },
+                draw() {
+                    const sky = x.createLinearGradient(0, 0, 0, 450); sky.addColorStop(0, '#101947'); sky.addColorStop(1, '#4f8edb'); x.fillStyle = sky; x.fillRect(0, 0, 800, 450);
+                    x.fillStyle = '#fff'; for (let i = 0; i < 45; i++) { const sx = (i * 137) % 800, sy = (i * 71 + elapsed * 40) % 440; x.fillRect(sx, sy, 2, 2); }
+                    for (const r of rocks) { x.fillStyle = '#8d6e63'; x.beginPath(); x.arc(r.x, r.y, r.r, 0, Math.PI * 2); x.fill(); x.fillStyle = '#bcaaa4'; x.beginPath(); x.arc(r.x - 4, r.y - 4, r.r * .35, 0, Math.PI * 2); x.fill(); }
+                    for (const p of players) if (p.alive) { x.fillStyle = '#ff6d00'; x.beginPath(); x.moveTo(p.x, p.y + 24); x.lineTo(p.x - 7, p.y + 7); x.lineTo(p.x + 7, p.y + 7); x.fill(); x.fillStyle = p.ai ? C[p.i % C.length] : playerColor(p.i); x.beginPath(); x.moveTo(p.x, p.y - 20); x.lineTo(p.x - 13, p.y + 12); x.lineTo(p.x + 13, p.y + 12); x.closePath(); x.fill(); x.fillStyle = '#bbdefb'; x.beginPath(); x.arc(p.x, p.y, 5, 0, Math.PI * 2); x.fill(); txt(p.ai ? '🤖' : playerName(p.i), p.x, p.y + 38, 13); }
+                    txt(`⭐ ${Math.floor(elapsed * 10)}     ⏱ ${Math.max(0, 35 - Math.floor(elapsed))}`, 400, 35, 24);
+                }
+            };
+            return g;
+        }
+
+        function runner(n, mode) {
+            const ai = mode === 'solo', total = ai ? 2 : n, racers = [], hazards = [];
+            let spawn = .8, elapsed = 0;
+            const looks = { icon: '🐑', ground: '#5d8b34', sky: '#f5b75e', title: 'سباق الخرفان' };
+            for (let i = 0; i < total; i++) racers.push({ i, y: 0, vy: 0, jumping: false, alive: true, score: 0, ai: ai && i === 1 });
+            const g = {
+                done: false, win: [], msg: '',
+                update(dt) {
+                    elapsed += dt; spawn -= dt;
+                    if (spawn <= 0) { spawn = Math.max(1.05, 2.05 - elapsed * .012); hazards.push({ lane: Math.floor(Math.random() * total), x: 850, hit: new Set(), moving: Math.random() < .5, phase: Math.random() * Math.PI * 2 }); }
+                    for (const hazard of hazards) { hazard.x -= 205 * dt; hazard.phase += dt * (hazard.moving ? 4.2 : 0); }
+                    for (const racer of racers) {
+                        if (!racer.alive) continue;
+                        const input = racer.ai ? null : inp(racer.i), nearby = hazards.find(h => h.lane === racer.i && h.x > 100 && h.x < 235);
+                        const jump = racer.ai ? !!nearby && !racer.jumping && nearby.x < 205 : input.a;
+                        if (jump && !racer.jumping) { racer.vy = -390; racer.jumping = true; }
+                        racer.vy += 1000 * dt; racer.y += racer.vy * dt;
+                        if (racer.y > 0) { racer.y = 0; racer.vy = 0; racer.jumping = false; }
+                        if (nearby && nearby.x < 150 && racer.y > -40 && !nearby.hit.has(racer.i)) { nearby.hit.add(racer.i); racer.alive = false; }
+                        racer.score = Math.floor(elapsed * 10);
+                    }
+                    for (let i = hazards.length - 1; i >= 0; i--) if (hazards[i].x < -30) hazards.splice(i, 1);
+                    const survivors = racers.filter(r => r.alive);
+                    if (elapsed >= 35 || !survivors.length || (ai && survivors.length < racers.length) || (!ai && survivors.length <= 1)) {
+                        g.done = true; const winners = survivors.length ? survivors : racers;
+                        g.win = winners.filter(r => !r.ai).map(r => r.i);
+                        g.outcome = winners.length > 1 ? 'draw' : ai ? (g.win.includes(0) ? 'win' : 'loss') : winners.length ? 'win' : 'draw';
+                        g.msg = winners.length > 1 ? 'تعادل فسباق الخرفان!' : ai ? (g.win.includes(0) ? 'قفزتي فالتوقيت وربحتي السباق!' : 'الخروف ديال الكمبيوتر وصل قبل منك.') : `ربح اللاعب ${winners[0].i + 1} سباق الخرفان!`;
+                    }
+                },
+                draw() {
+                    const laneH = 450 / total;
+                    for (const racer of racers) {
+                        const top = racer.i * laneH, groundY = top + laneH * .74;
+                        x.fillStyle = looks.sky; x.fillRect(0, top, 800, laneH); x.fillStyle = looks.ground; x.fillRect(0, groundY, 800, laneH * .26); x.fillStyle = '#ffffffaa'; x.fillRect(0, groundY, 800, 3);
+                        txt(racer.ai ? '🤖 AI' : `P${racer.i + 1}`, 68, top + 22, 15);
+                        if (racer.alive) txt(looks.icon, 165, groundY + laneH * .04 + racer.y, 34); else txt('💥', 165, groundY + 22, 26);
+                        for (const hazard of hazards) if (hazard.lane === racer.i) txt(hazard.moving ? '🌵' : '🪵', hazard.x, groundY + laneH * .08 + (hazard.moving ? Math.sin(hazard.phase) * 9 : 0), 29);
+                    }
+                    txt(`⏱ ${Math.max(0, 35 - Math.floor(elapsed))} · ⬆️ قفز`, 730, 28, 18);
+                    txt('🐑 سباق الخرفان · أي اصطدام كيقصي اللاعب!', 400, 30, 20);
+                }
+            };
+            return g;
+        }
+
+        function sheep(n, mode) { return runner(n, mode); }
+
+        function scooter(n, mode) {
+            const ai = mode === 'solo', total = ai ? 2 : n, lapLength = 1250, laps = 3, finishDistance = lapLength * laps;
+            const racers = [], hazards = [], obstacleTypes = ['🚧', '🛒', '🪵', '🚙'];
+            for (let lap = 0; lap < laps; lap++) for (let h = 0; h < 8; h++) {
+                hazards.push({ distance: lap * lapLength + 105 + h * 140, lane: (h * 2 + lap) % 3, icon: obstacleTypes[(h + lap) % obstacleTypes.length] });
+            }
+            for (let i = 0; i < total; i++) racers.push({ i, lane: 1, distance: 0, boost: 1, moveCd: 0, slow: 0, hit: new Set(), ai: ai && i === 1, finishTime: null });
+            let elapsed = 0, roadScroll = 0;
+            const g = {
+                done: false, win: [], msg: '',
+                update(dt) {
+                    elapsed += dt; roadScroll += dt * 230;
+                    for (const r of racers) {
+                        if (r.finishTime !== null) continue;
+                        r.moveCd = Math.max(0, r.moveCd - dt);
+                        r.slow = Math.max(0, r.slow - dt);
+                        const nextHazard = hazards.find(h => !r.hit.has(h.distance) && h.distance >= r.distance && h.distance - r.distance < 190);
+                        if (r.ai) {
+                            if (nextHazard && nextHazard.lane === r.lane && nextHazard.distance - r.distance < 125 && r.moveCd <= 0) {
+                                const openLane = [0, 1, 2].find(lane => lane !== nextHazard.lane && !hazards.some(h => !r.hit.has(h.distance) && h.lane === lane && h.distance >= r.distance && h.distance - r.distance < 105));
+                                if (openLane !== undefined) r.lane = openLane;
+                                r.moveCd = .28;
+                            }
+                        } else if (r.moveCd <= 0) {
+                            const dx = inp(r.i).dx;
+                            if (dx) { r.lane = Math.max(0, Math.min(2, r.lane + Math.sign(dx))); r.moveCd = .2; }
+                        }
+                        const k = r.ai ? null : inp(r.i);
+                        const boosting = r.ai ? r.boost > .2 && (!nextHazard || nextHazard.distance - r.distance > 145) : k.a && r.boost > 0;
+                        if (boosting) r.boost = Math.max(0, r.boost - dt * .42);
+                        else r.boost = Math.min(1, r.boost + dt * .18);
+                        const currentSpeed = r.slow > 0 ? 72 : 158 + (boosting ? 82 : 0);
+                        const previousDistance = r.distance;
+                        r.distance = Math.min(finishDistance, r.distance + currentSpeed * dt);
+                        for (const h of hazards) {
+                            if (r.hit.has(h.distance) || h.distance < previousDistance || h.distance > r.distance) continue;
+                            r.hit.add(h.distance);
+                            if (h.lane === r.lane) r.slow = 1.1;
+                        }
+                        if (r.distance >= finishDistance) r.finishTime = elapsed;
+                    }
+                    if (racers.some(r => r.finishTime !== null) || elapsed >= 70) {
+                        g.done = true;
+                        const firstFinish = racers.filter(r => r.finishTime !== null).sort((a, b) => a.finishTime - b.finishTime)[0];
+                        const standings = firstFinish ? racers.filter(r => r.finishTime !== null && Math.abs(r.finishTime - firstFinish.finishTime) < .05) : racers.filter(r => r.distance === Math.max(...racers.map(q => q.distance)));
+                        g.win = standings.filter(r => !r.ai).map(r => r.i);
+                        g.outcome = standings.length > 1 ? 'draw' : ai ? (g.win.includes(0) ? 'win' : 'loss') : 'win';
+                        g.msg = standings.length > 1 ? 'تعادل فسباق السكوتر!' : ai ? (g.win.includes(0) ? 'وصلتي لخط النهاية وربحتي السباق!' : 'السكوتر ديال الكمبيوتر وصل اللول!') : `ربح ${playerName(standings[0].i)} سباق السكوتر!`;
+                    }
+                },
+                draw() {
+                    x.fillStyle = '#f1bf77'; x.fillRect(0, 0, 800, 450);
+                    for (let i = 0; i < 9; i++) { x.fillStyle = i % 2 ? '#497a41' : '#56894a'; x.fillRect(0, i * 58 + 28, 800, 28); }
+                    x.fillStyle = '#262f39'; x.fillRect(75, 0, 650, 450);
+                    x.fillStyle = '#e8d6a8'; x.fillRect(70, 0, 6, 450); x.fillRect(724, 0, 6, 450);
+                    x.strokeStyle = '#ffffffc9'; x.lineWidth = 5; x.setLineDash([30, 22]);
+                    for (const divider of [292, 508]) { x.beginPath(); x.moveTo(divider, -(roadScroll % 53)); x.lineTo(divider, 450); x.stroke(); }
+                    x.setLineDash([]);
+                    const rowH = 450 / total;
+                    racers.forEach(r => {
+                        const top = r.i * rowH, bottom = top + rowH, laneW = 650 / 3;
+                        if (r.i) { x.strokeStyle = '#fff8'; x.lineWidth = 2; x.beginPath(); x.moveTo(78, top); x.lineTo(722, top); x.stroke(); }
+                        const lap = Math.min(laps, Math.floor(r.distance / lapLength) + 1), tint = r.ai ? C[r.i % C.length] : playerColor(r.i);
+                        txt(`${r.ai ? '🤖 المنافس' : playerName(r.i)}  ·  لفة ${lap}/3  ·  ${Math.floor(r.distance / finishDistance * 100)}%`, 400, top + Math.min(42, rowH * .2), 20, tint);
+                        const playerY = bottom - Math.max(35, rowH * .25), playerX = 76 + laneW * (r.lane + .5);
+                        for (const h of hazards) {
+                            const ahead = h.distance - r.distance;
+                            if (h.distance < r.distance - 30 || ahead > 190) continue;
+                            const hazardY = bottom - 35 - Math.max(0, ahead) / 190 * Math.max(35, rowH - 65);
+                            const hx = 76 + laneW * (h.lane + .5);
+                            if (h.icon === '🚧') {
+                                x.fillStyle = '#f3a322'; x.strokeStyle = '#fff'; x.lineWidth = 2;
+                                x.beginPath(); x.moveTo(hx, hazardY - 16); x.lineTo(hx - 16, hazardY + 13); x.lineTo(hx + 16, hazardY + 13); x.closePath(); x.fill(); x.stroke();
+                                x.strokeStyle = '#fff'; x.lineWidth = 3; x.beginPath(); x.moveTo(hx - 8, hazardY + 7); x.lineTo(hx - 2, hazardY - 2); x.moveTo(hx + 2, hazardY + 7); x.lineTo(hx + 8, hazardY - 2); x.stroke();
+                            } else if (h.icon === '🪵') {
+                                x.fillStyle = '#8d552f'; x.strokeStyle = '#f6d29a'; x.lineWidth = 2; x.beginPath(); x.roundRect(hx - 18, hazardY - 8, 36, 16, 7); x.fill(); x.stroke();
+                            } else {
+                                x.fillStyle = h.icon === '🚙' ? '#e7483f' : '#f3a322'; x.strokeStyle = '#fff'; x.lineWidth = 2;
+                                x.fillRect(hx - 14, hazardY - 12, 28, 24); x.strokeRect(hx - 14, hazardY - 12, 28, 24);
+                                x.fillStyle = '#d9f1fb'; x.fillRect(hx - 9, hazardY - 8, 18, 7);
+                            }
+                        }
+                        if (r.finishTime !== null) txt('🏁', playerX, playerY, 38, tint);
+                        else {
+                            x.save(); x.translate(playerX, playerY);
+                            x.fillStyle = '#151a20'; x.beginPath(); x.ellipse(-11, 12, 6, 10, 0, 0, Math.PI * 2); x.fill(); x.beginPath(); x.ellipse(12, 12, 6, 10, 0, 0, Math.PI * 2); x.fill();
+                            x.fillStyle = tint; x.strokeStyle = '#fff'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(-16, 5); x.lineTo(-7, -3); x.lineTo(9, -4); x.lineTo(17, 4); x.lineTo(13, 9); x.lineTo(-12, 9); x.closePath(); x.fill(); x.stroke();
+                            x.fillStyle = '#f2c99b'; x.beginPath(); x.arc(-2, -13, 8, 0, Math.PI * 2); x.fill();
+                            x.fillStyle = tint; x.beginPath(); x.arc(-2, -17, 9, Math.PI, Math.PI * 2); x.lineTo(7, -13); x.lineTo(-10, -13); x.fill();
+                            x.restore();
+                        }
+                        x.fillStyle = '#18212b'; x.fillRect(75, bottom - 8, 650, 6); x.fillStyle = tint; x.fillRect(75, bottom - 8, 650 * Math.min(1, r.distance / finishDistance), 6);
+                        if (r.slow > 0) txt('⚠️', playerX, playerY - 25, 16, '#ffcc80');
+                    });
+                    for (let player = 0; player < total; player++) for (let lap = 1; lap <= 3; lap++) {
+                        const markX = 75 + 650 * (lap * lapLength / finishDistance);
+                        x.strokeStyle = racers[player].distance >= lap * lapLength ? '#ffe082' : '#ffffff66'; x.lineWidth = 3;
+                        x.beginPath(); x.moveTo(markX, player * rowH + 24); x.lineTo(markX, (player + 1) * rowH - 4); x.stroke();
+                    }
+                    txt(`سباق الطريق الطويل  ·  ⏱ ${Math.max(0, 70 - Math.floor(elapsed))}  ·  ◀ ▶ المسارات  ·  ⚡ تيربو`, 400, 16, 19, '#fff');
+                }
+            };
+            return g;
+        }
+
+        function camel(n, mode) {
+            const ai = mode === 'solo', total = ai ? 2 : n, distanceToFinish = 2100, racers = [];
+            const dunes = [260, 545, 830, 1115, 1400, 1685, 1950].map((distance, i) => ({ distance, lane: [1, 0, 2, 1, 2, 0, 1][i], icon: i % 2 ? '🪨' : '🌵' }));
+            for (let i = 0; i < total; i++) racers.push({ i, lane: 1, distance: 0, stamina: 1, jumpY: 0, jumpV: 0, jumpCd: 0, laneCd: 0, jumpHeld: false, slow: 0, hit: new Set(), ai: ai && i === 1, finishTime: null });
+            let elapsed = 0;
+            const g = {
+                done: false, win: [], msg: '',
+                update(dt) {
+                    elapsed += dt;
+                    for (const r of racers) {
+                        if (r.finishTime !== null) continue;
+                        r.jumpCd = Math.max(0, r.jumpCd - dt);
+                        r.laneCd = Math.max(0, r.laneCd - dt);
+                        r.slow = Math.max(0, r.slow - dt);
+                        const previousDistance = r.distance;
+                        let nextDune = dunes.find(d => !r.hit.has(d.distance) && d.distance >= r.distance && d.distance - r.distance < 180);
+                        if (r.ai) {
+                            if (nextDune && nextDune.lane === r.lane && nextDune.distance - r.distance < 125 && r.laneCd <= 0) { r.lane = (r.lane + 1) % 3; r.laneCd = .3; }
+                            if (nextDune && nextDune.lane === r.lane && nextDune.distance - r.distance < 90 && r.jumpCd <= 0) { r.jumpV = -285; r.jumpCd = .6; }
+                        } else {
+                            const k = inp(r.i);
+                            if (k.dx && r.laneCd <= 0) { r.lane = Math.max(0, Math.min(2, r.lane + Math.sign(k.dx))); r.laneCd = .16; }
+                            if (k.up && !r.jumpHeld && r.jumpCd <= 0) { r.jumpV = -285; r.jumpCd = .45; }
+                            r.jumpHeld = k.up;
+                        }
+                        r.jumpV += 650 * dt;
+                        r.jumpY += r.jumpV * dt;
+                        if (r.jumpY > 0) { r.jumpY = 0; r.jumpV = 0; }
+                        const k = r.ai ? null : inp(r.i);
+                        const boosting = r.ai ? r.stamina > .45 && (!nextDune || nextDune.distance - r.distance > 125) : k.a && r.stamina > 0;
+                        if (boosting) r.stamina = Math.max(0, r.stamina - dt * .34);
+                        else r.stamina = Math.min(1, r.stamina + dt * .22);
+                        const speed = r.slow > 0 ? 55 : 100 + (boosting ? 58 : 0);
+                        r.distance = Math.min(distanceToFinish, r.distance + speed * dt);
+                        const crossedDune = dunes.find(d => !r.hit.has(d.distance) && d.distance > previousDistance && d.distance <= r.distance);
+                        if (crossedDune && crossedDune.lane === r.lane) {
+                            r.hit.add(crossedDune.distance);
+                            if (r.jumpY > -30) r.slow = 1.25;
+                        }
+                        if (r.distance >= distanceToFinish) r.finishTime = elapsed;
+                    }
+                    if (racers.some(r => r.finishTime !== null) || elapsed >= 50) {
+                        g.done = true;
+                        const first = racers.filter(r => r.finishTime !== null).sort((a, b) => a.finishTime - b.finishTime)[0];
+                        const standings = first ? racers.filter(r => r.finishTime !== null && Math.abs(r.finishTime - first.finishTime) < .05) : racers.filter(r => r.distance === Math.max(...racers.map(q => q.distance)));
+                        g.win = standings.filter(r => !r.ai).map(r => r.i);
+                        g.outcome = standings.length > 1 ? 'draw' : ai ? (g.win.includes(0) ? 'win' : 'loss') : 'win';
+                        g.msg = standings.length > 1 ? 'تعادل فسباق الجمال!' : ai ? (g.win.includes(0) ? 'جملك وصل اللول وربح!' : 'جمل الكمبيوتر وصل اللول!') : `ربح اللاعب ${standings[0].i + 1} سباق الجمال!`;
+                    }
+                },
+                draw() {
+                    const rowH = 450 / total, centers = [270, 400, 530];
+                    racers.forEach(r => {
+                        const top = r.i * rowH, horizon = top + rowH * .24;
+                        x.fillStyle = '#f2c77b'; x.fillRect(0, top, 800, rowH);
+                        x.fillStyle = '#edb961'; x.beginPath(); x.moveTo(0, horizon + 20); x.lineTo(800, horizon + 20); x.lineTo(800, top + rowH); x.lineTo(0, top + rowH); x.fill();
+                        x.fillStyle = '#d99a4e'; x.beginPath(); x.moveTo(0, top + rowH * .8); x.quadraticCurveTo(400, top + rowH * .55, 800, top + rowH * .78); x.lineTo(800, top + rowH); x.lineTo(0, top + rowH); x.fill();
+                        txt(r.ai ? '🤖 الجمل المنافس' : `الجمل ${r.i + 1}`, 100, top + 17, 14);
+                        dunes.forEach(d => {
+                            const ahead = d.distance - r.distance;
+                            if (ahead < 0 || ahead > 260) return;
+                            const y = horizon + (1 - ahead / 260) * rowH * .56;
+                            txt(d.icon, centers[d.lane], y, Math.max(16, Math.min(27, rowH * .24)));
+                        });
+                        const camelY = top + rowH * .76 + r.jumpY;
+                        txt(r.finishTime !== null ? '🏁' : '🐪', centers[r.lane], camelY, Math.max(24, Math.min(36, rowH * .33)), r.ai ? C[r.i % C.length] : playerColor(r.i));
+                        x.fillStyle = '#694319'; x.fillRect(290, top + rowH - 9, 220, 5);
+                        x.fillStyle = '#74a942'; x.fillRect(290, top + rowH - 9, 220 * r.stamina, 5);
+                        x.fillStyle = '#fff'; x.fillRect(290, top + rowH - 18, 220, 4);
+                        x.fillStyle = '#4b8bce'; x.fillRect(290, top + rowH - 18, 220 * Math.min(1, r.distance / distanceToFinish), 4);
+                        txt(`${Math.floor(r.distance / distanceToFinish * 100)}%`, 550, top + rowH - 10, 12);
+                    });
+                    txt('🏜️ سباق الصحراء — وصل لخط النهاية', 400, 22, 19);
+                }
+            };
+            return g;
+        }
+
+        function tagine(n, mode) {
+            const ai = mode === 'solo', total = ai ? 2 : n, ingredients = ['🥕', '🍅', '🧅', '🫑', '🧄', '🥔', '🍋', '🫒', '🌶️', '🌿'];
+            const recipe = shuffle(ingredients.slice()).slice(0, 4), players = [];
+            let phase = 'memorize', phaseTime = 5, gameTime = 30, result = '';
+            for (let i = 0; i < total; i++) players.push({ i, ai: ai && i === 1, selected: new Set(), cursor: 0, alive: true, submitted: false, aiDelay: .7, aiPicked: [] });
+            const panelWidth = 800 / total;
+            const win = (p) => {
+                g.done = true; g.win = p.ai ? [] : [p.i]; g.outcome = p.ai ? 'loss' : 'win';
+                g.msg = p.ai ? 'الكمبيوتر تذكّر المكونات وربح الطاجين!' : `اللاعب ${p.i + 1} وجد المقادير الصحيحة وربح!`;
+            };
+            const submit = p => {
+                if (!p.alive || p.submitted || phase !== 'assemble') return;
+                p.submitted = true;
+                if (p.selected.size === 4 && recipe.every(item => p.selected.has(item))) win(p);
+                else { p.alive = false; result = p.ai ? 'الكمبيوتر اختار مقادير غلط!' : `اللاعب ${p.i + 1} اختار مقادير غلط وخرج من التحدي.`; }
+            };
+            const toggleIngredient = (p, index) => {
+                if (phase !== 'assemble' || !p.alive || p.submitted) return;
+                p.cursor = index;
+                const item = ingredients[index];
+                if (p.selected.has(item)) p.selected.delete(item);
+                else if (p.selected.size < 4) p.selected.add(item);
+            };
+            const g = {
+                done: false, win: [], msg: '',
+                chooseAt(px, py) {
+                    if (phase !== 'assemble' || g.done) return;
+                    const playerIndex = Math.max(0, Math.min(total - 1, Math.floor(px / panelWidth))), p = players[playerIndex];
+                    if (!p || p.ai || !p.alive) return;
+                    const localX = px - playerIndex * panelWidth;
+                    if (py >= 390 && py <= 438) { submit(p); return; }
+                    const col = Math.floor((localX - 8) / ((panelWidth - 16) / 2)), row = Math.floor((py - 172) / 42);
+                    if (col >= 0 && col < 2 && row >= 0 && row < 5) toggleIngredient(p, row * 2 + col);
+                },
+                handleKey(e) {
+                    if (e.repeat || phase !== 'assemble') return;
+                    const key = e.key.toLowerCase();
+                    for (const p of players) {
+                        if (p.ai || !p.alive) continue;
+                        const map = KM[p.i], direction = key === map.l ? 'left' : key === map.r ? 'right' : key === map.u ? 'up' : key === map.d ? 'down' : '';
+                        if (direction === 'left') p.cursor = (p.cursor + 9) % 10;
+                        else if (direction === 'right') p.cursor = (p.cursor + 1) % 10;
+                        else if (direction === 'up') p.cursor = (p.cursor + 8) % 10;
+                        else if (direction === 'down') p.cursor = (p.cursor + 2) % 10;
+                        else if (key === map.a) { if (p.selected.size === 4) submit(p); else toggleIngredient(p, p.cursor); }
+                    }
+                },
+                update(dt) {
+                    if (g.done) return;
+                    if (phase === 'memorize') {
+                        phaseTime -= dt;
+                        if (phaseTime <= 0) { phase = 'assemble'; result = 'اختار نفس 4 مكونات اللي شفتي فالأول!'; }
+                        return;
+                    }
+                    gameTime -= dt;
+                    for (const p of players) if (p.ai && p.alive && !p.submitted) {
+                        p.aiDelay -= dt;
+                        if (p.aiDelay <= 0) {
+                            const correct = recipe[Math.min(p.aiPicked.length, 3)];
+                            p.selected.add(correct); p.aiPicked.push(correct); p.aiDelay = .72 + Math.random() * .28;
+                            if (p.selected.size === 4) submit(p);
+                        }
+                    }
+                    if (gameTime <= 0 && !g.done) {
+                        players.filter(p => p.alive && !p.submitted).forEach(p => { p.alive = false; });
+                        g.done = true; g.outcome = ai ? 'loss' : 'draw'; g.win = [];
+                        g.msg = result || (ai ? 'سال الوقت قبل ما تكمل الطاجين!' : 'سال الوقت! حتى لاعب ما كمل المقادير صحيحة.');
+                    }
+                    if (!g.done && players.every(p => !p.alive || p.submitted) && !players.some(p => p.alive && p.submitted)) {
+                        g.done = true; g.outcome = ai ? 'loss' : 'draw'; g.win = []; g.msg = result || 'كل اللاعبين اختارو مقادير غلط. جربو من جديد!';
+                    }
+                },
+                draw() {
+                    x.fillStyle = '#9b542d'; x.fillRect(0, 0, 800, 450);
+                    x.fillStyle = '#dbad67'; x.fillRect(7, 7, 786, 436);
+                    if (phase === 'memorize') {
+                        txt('حفظ المقادير قبل ما يختافيو!', 400, 50, 25, '#fff3bb');
+                        txt(`باقي ${Math.max(0, Math.ceil(phaseTime))} ثواني`, 400, 92, 23, '#8a241c');
+                        x.fillStyle = '#75401f'; x.beginPath(); x.ellipse(400, 285, 172, 94, 0, 0, Math.PI * 2); x.fill();
+                        x.fillStyle = '#e9a845'; x.beginPath(); x.ellipse(400, 272, 152, 74, 0, 0, Math.PI * 2); x.fill();
+                        txt('🍲', 400, 282, 64);
+                        recipe.forEach((item, index) => txt(item, 305 + index * 64, 250 + (index % 2) * 44, 34));
+                        txt('تذكّر هاد 4 مكونات!', 400, 405, 20, '#49271c');
+                        return;
+                    }
+                    txt(`ركّب الطاجين · باقي ${Math.ceil(gameTime)} ثانية`, 400, 25, 20, '#4b2017');
+                    players.forEach(p => {
+                        const left = p.i * panelWidth;
+                        if (p.i) { x.strokeStyle = '#8b4b2b'; x.lineWidth = 2; x.beginPath(); x.moveTo(left, 34); x.lineTo(left, 438); x.stroke(); }
+                        txt(p.ai ? '🤖 الكمبيوتر' : playerName(p.i), left + panelWidth / 2, 56, Math.min(19, panelWidth / 10), p.alive ? playerColor(p.i) : '#555');
+                        for (let slot = 0; slot < 4; slot++) {
+                            const slotX = left + panelWidth / 2 + (slot - 1.5) * Math.min(38, panelWidth / 5);
+                            x.fillStyle = '#734324'; x.beginPath(); x.arc(slotX, 102, 15, 0, Math.PI * 2); x.fill();
+                            const chosen = [...p.selected][slot]; if (chosen) txt(chosen, slotX, 110, 22);
+                        }
+                        ingredients.forEach((item, index) => {
+                            const col = index % 2, row = Math.floor(index / 2), cellW = (panelWidth - 20) / 2, bx = left + 8 + col * cellW, by = 168 + row * 42;
+                            x.fillStyle = p.selected.has(item) ? '#65a66a' : p.cursor === index && !p.ai ? '#ffe082' : '#f6dfb4';
+                            x.fillRect(bx, by, cellW - 4, 38);
+                            x.strokeStyle = p.selected.has(item) ? '#215c31' : '#98683b'; x.lineWidth = 2; x.strokeRect(bx, by, cellW - 4, 38);
+                            txt(`${item}${p.selected.has(item) ? ' ✓' : ''}`, bx + (cellW - 4) / 2, by + 27, Math.min(19, cellW / 2.4), '#39251b');
+                        });
+                        x.fillStyle = p.alive ? '#159447' : '#666'; x.fillRect(left + 8, 390, panelWidth - 16, 43);
+                        txt(p.submitted ? 'تم التقديم' : p.alive ? 'تأكيد الطاجين ✓' : 'خرج من التحدي', left + panelWidth / 2, 418, Math.min(17, panelWidth / 10), '#fff');
+                    });
+                    txt(result, 400, 450, 13, '#522c1b');
+                }
+            };
+            gc.onpointerdown = event => {
+                const rect = gc.getBoundingClientRect(), px = (event.clientX - rect.left) * gc.width / rect.width, py = (event.clientY - rect.top) * gc.height / rect.height;
+                g.chooseAt(px, py);
+            };
+            return g;
+        }
+
+        function flag(n, mode) {
+            const ai = mode === 'solo', total = mode === 'team' ? 4 : ai ? 2 : n, players = [], scores = [0, 0], shots = [];
+            const bases = [{ x: 55, y: 225 }, { x: 745, y: 225 }];
+            for (let i = 0; i < total; i++) {
+                const team = ai ? i : i % 2;
+                const member = ai ? 0 : Math.floor(i / 2);
+                players.push({ i, team, x: team === 0 ? 90 + member * 32 : 710 - member * 32, y: 170 + member * 100, spawnX: team === 0 ? 90 + member * 32 : 710 - member * 32, spawnY: 170 + member * 100, ai: ai && i === 1, carrying: -1, angle: team ? Math.PI : 0, cd: 0, stun: 0, invulnerable: 0, wasAction: false, shoot: false });
+            }
+            const g = {
+                done: false, win: [], msg: '',
+                update(dt) {
+                    for (const p of players) {
+                        p.cd = Math.max(0, p.cd - dt); p.stun = Math.max(0, p.stun - dt); p.invulnerable = Math.max(0, p.invulnerable - dt);
+                        if (p.stun > 0) continue;
+                        const ownBase = bases[p.team], enemyBase = bases[1 - p.team];
+                        let moving = false, fire = false;
+                        if (p.ai) {
+                            const enemy = players.find(other => other.team !== p.team && other.stun <= 0);
+                            const target = p.carrying >= 0 ? ownBase : enemyBase;
+                            const dx = target.x - p.x, dy = target.y - p.y, distance = Math.hypot(dx, dy) || 1;
+                            if (enemy && Math.hypot(enemy.x - p.x, enemy.y - p.y) < 175 && p.cd <= 0) {
+                                const targetAngle = Math.atan2(enemy.y - p.y, enemy.x - p.x);
+                                const difference = Math.atan2(Math.sin(targetAngle - p.angle), Math.cos(targetAngle - p.angle));
+                                p.angle += Math.sign(difference) * Math.min(Math.abs(difference), 2.4 * dt);
+                                p.shoot = Math.abs(difference) < .22;
+                            } else {
+                                p.shoot = false;
+                                p.angle = Math.atan2(dy, dx);
+                            }
+                            moving = true;
+                            fire = p.shoot;
+                        } else {
+                            const input = inp(p.i);
+                            moving = input.a;
+                            fire = input.a;
+                            if (!moving) p.angle += 1.65 * dt;
+                        }
+                        if (moving) { p.x += Math.cos(p.angle) * 112 * dt; p.y += Math.sin(p.angle) * 112 * dt; }
+                        p.x = Math.max(20, Math.min(780, p.x)); p.y = Math.max(45, Math.min(405, p.y));
+                        if (fire && p.cd <= 0) {
+                            p.cd = .55;
+                            shots.push({ x: p.x + Math.cos(p.angle) * 20, y: p.y + Math.sin(p.angle) * 20, vx: Math.cos(p.angle) * 360, vy: Math.sin(p.angle) * 360, team: p.team, owner: p.i, life: .8 });
+                        }
+                        if (p.carrying < 0 && Math.hypot(p.x - enemyBase.x, p.y - enemyBase.y) < 38) p.carrying = 1 - p.team;
+                        if (p.carrying >= 0 && Math.hypot(p.x - ownBase.x, p.y - ownBase.y) < 38) { scores[p.team]++; p.carrying = -1; p.x = ownBase.x; p.y = ownBase.y; }
+                    }
+                    for (let i = shots.length - 1; i >= 0; i--) {
+                        const shot = shots[i]; shot.x += shot.vx * dt; shot.y += shot.vy * dt; shot.life -= dt;
+                        const target = players.find(p => p.team !== shot.team && p.stun <= 0 && p.invulnerable <= 0 && Math.hypot(p.x - shot.x, p.y - shot.y) < 19);
+                        if (target) { target.stun = 1.15; target.invulnerable = 1.8; target.x = target.spawnX; target.y = target.spawnY; if (target.carrying >= 0) target.carrying = -1; }
+                        if (target || shot.life <= 0 || shot.x < 0 || shot.x > 800 || shot.y < 0 || shot.y > 450) shots.splice(i, 1);
+                    }
+                    if (scores.some(score => score >= 2)) { g.done = true; const team = scores[0] >= 2 ? 0 : 1; g.outcome = ai && team === 1 ? 'loss' : 'win'; g.win = players.filter(p => p.team === team && !p.ai).map(p => p.i); g.msg = ai && team === 1 ? 'الكمبيوتر خطف جوج أعلام وربح!' : `الفريق ${team + 1} ربح! (${scores[0]} - ${scores[1]})`; }
+                },
+                draw() {
+                    x.fillStyle = '#d4b276'; x.fillRect(0, 0, 800, 450); x.fillStyle = '#c5a363'; x.fillRect(25, 25, 750, 400); x.strokeStyle = '#fff8'; x.setLineDash([12, 8]); x.lineWidth = 3; x.beginPath(); x.moveTo(400, 25); x.lineTo(400, 425); x.stroke(); x.setLineDash([]);
+                    bases.forEach((base, i) => { x.fillStyle = i ? '#174ea6' : '#c62828'; x.fillRect(base.x - 34, base.y - 52, 68, 104); txt(i ? '🇲🇦' : '🚩', base.x, base.y + 7, 32); txt(`الفريق ${i + 1}: ${scores[i]}`, base.x, base.y + 78, 14); });
+                    for (const shot of shots) { x.fillStyle = '#ffe082'; x.beginPath(); x.arc(shot.x, shot.y, 5, 0, Math.PI * 2); x.fill(); }
+                    for (const p of players) {
+                        if (p.stun > 0) { txt('💫', p.x, p.y, 27); continue; }
+                        x.save(); x.translate(p.x, p.y); x.rotate(p.angle); x.fillStyle = p.ai ? (p.team ? '#1e88e5' : '#e53935') : playerColor(p.i); x.beginPath(); x.arc(0, 0, 16, 0, Math.PI * 2); x.fill(); x.strokeStyle = '#fff'; x.lineWidth = 3; x.stroke(); x.fillStyle = '#fff'; x.fillRect(7, -3, 17, 6); x.restore();
+                        txt(p.ai ? '🤖' : playerName(p.i), p.x, p.y + 5, 10); if (p.carrying >= 0) txt('🏳️', p.x, p.y - 22, 18);
+                    }
+                    txt('خطف العلم ورجعو للقاعدة · وقف للتدوير · شدّ 🔥 للحركة وإطلاق النار', 400, 24, 17);
+                }
+            };
+            return g;
+        }
+
+        /* 5. الحمام */
+        function pigeon(n, mode) {
+            const ai = mode === 'solo', total = ai ? 2 : n, P = [], pp = []; let tm = 1, sc = 0, al = total, lastDead = 0;
+            for (let i = 0; i < total; i++) P.push({ x: ai && i === 1 ? 215 : 150 + i * 30, y: 180 + i * 25, v: 0, alive: true, k: false, i, ai: ai && i === 1 });
+            const g = {
+                done: false, win: [], msg: '',
+                update(dt) {
+                    tm += dt; if (tm > 1.6) { tm = 0; pp.push({ x: 820, g: 70 + Math.random() * 210, p: false }) }
+                    for (const q of pp) { q.x -= 160 * dt; if (!q.p && q.x + 60 < 130) { q.p = true; sc++ } } if (pp.length && pp[0].x < -70) pp.shift();
+                    for (const p of P) {
+                        if (!p.alive) continue;
+                        const nextPipe = pp.find(q => q.x + 60 > p.x && q.x < p.x + 80);
+                        const up = p.ai ? ((nextPipe ? p.y > nextPipe.g + 82 : p.y > 285) || p.y > 340) : inp(p.i).up;
+                        if (up && !p.k) p.v = -290; p.k = up; p.v += 880 * dt; p.y += p.v * dt;
+                        let d = p.y < 8 || p.y > 420; for (const q of pp) if (p.x + 13 > q.x && p.x - 13 < q.x + 60 && (p.y - 12 < q.g || p.y + 12 > q.g + 135)) d = true;
+                        if (d) { p.alive = false; al--; lastDead = p.i }
+                    }
+                    if (ai && al <= 1) {
+                        g.done = true;
+                        const w = P.find(p => p.alive);
+                        g.outcome = !w ? 'draw' : !w.ai ? 'win' : 'loss';
+                        g.win = w && !w.ai ? [0] : [];
+                        g.msg = !w ? `تعادل! النتيجة: ${sc}` : !w.ai ? `سبقت الكمبيوتر! النتيجة: ${sc}` : `الكمبيوتر ربح! النتيجة: ${sc}`;
+                    }
+                    else if (!ai && n > 1 && al === 0) { g.done = true; g.outcome = 'draw'; g.msg = `تعادل! النتيجة: ${sc}` }
+                    else if (!ai && n > 1 && al === 1) { g.done = true; const w = P.find(p => p.alive); g.outcome = 'win'; g.win = [w.i]; g.msg = 'فاز اللاعب ' + (w.i + 1) + ' (' + sc + ')' }
+                },
+                draw() {
+                    x.fillStyle = '#6fcbf5'; x.fillRect(0, 0, 800, 450);
+                    for (const q of pp) { x.fillStyle = '#2e9e4f'; x.fillRect(q.x, 0, 60, q.g); x.fillRect(q.x, q.g + 135, 60, 320) }
+                    for (const p of P) { if (!p.alive) continue; x.fillStyle = p.ai ? C[p.i % C.length] : playerColor(p.i); x.beginPath(); x.arc(p.x, p.y, 12, 0, 7); x.fill(); txt(p.ai ? '🤖' : playerName(p.i), p.x, p.y - 17, 10) }
+                    txt(sc, 400, 50, 40)
+                }
+            }; return g
+        }
+
+        /* Turn-based strategy games use direct touch/click and keyboard selection. */
+        const CHESS_GLYPHS = { K: '♔', Q: '♕', R: '♖', B: '♗', N: '♘', P: '♙', k: '♚', q: '♛', r: '♜', b: '♝', n: '♞', p: '♟' };
+        const CHESS_VALUE = { p: 100, n: 320, b: 330, r: 500, q: 900, k: 20000 };
+        const CHESS_DIRS = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [-1, 1], [1, -1], [1, 1]];
+
+        function chessColor(piece) { return piece === piece.toUpperCase() ? 'w' : 'b'; }
+        function chessCopy(s) {
+            return { board: s.board.map(row => row.slice()), turn: s.turn, castle: s.castle, ep: s.ep && [...s.ep], halfmove: s.halfmove, fullmove: s.fullmove };
+        }
+        function chessInitial() {
+            return {
+                board: [Array.from('rnbqkbnr'), Array(8).fill('p'), ...Array.from({ length: 4 }, () => Array(8).fill('')),
+                Array(8).fill('P'), Array.from('RNBQKBNR')],
+                turn: 'w', castle: 'KQkq', ep: null, halfmove: 0, fullmove: 1
+            };
+        }
+        function chessAttacked(board, r, c, by) {
+            const pawnRow = r + (by === 'w' ? 1 : -1), pawn = by === 'w' ? 'P' : 'p';
+            for (const dc of [-1, 1]) if (board[pawnRow]?.[c + dc] === pawn) return true;
+            const knight = by === 'w' ? 'N' : 'n';
+            for (const [dr, dc] of [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]])
+                if (board[r + dr]?.[c + dc] === knight) return true;
+            const king = by === 'w' ? 'K' : 'k';
+            for (const [dr, dc] of CHESS_DIRS) if (board[r + dr]?.[c + dc] === king) return true;
+            for (let d = 0; d < CHESS_DIRS.length; d++) {
+                const [dr, dc] = CHESS_DIRS[d]; let nr = r + dr, nc = c + dc, distance = 1;
+                while (board[nr]?.[nc] !== undefined) {
+                    const piece = board[nr][nc];
+                    if (piece) {
+                        if (chessColor(piece) === by) {
+                            const type = piece.toLowerCase();
+                            if (type === 'q' || (d < 4 && type === 'r') || (d >= 4 && type === 'b') || (distance === 1 && type === 'k')) return true;
+                        }
+                        break;
+                    }
+                    nr += dr; nc += dc; distance++;
+                }
+            }
+            return false;
+        }
+        function chessInCheck(state, color) {
+            const king = color === 'w' ? 'K' : 'k';
+            for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) if (state.board[r][c] === king)
+                return chessAttacked(state.board, r, c, color === 'w' ? 'b' : 'w');
+            return true;
+        }
+        function chessPseudo(state, r, c) {
+            const board = state.board, piece = board[r][c]; if (!piece) return [];
+            const side = chessColor(piece), type = piece.toLowerCase(), moves = [];
+            const add = (nr, nc, extra = {}) => {
+                if (nr < 0 || nr > 7 || nc < 0 || nc > 7) return false;
+                const target = board[nr][nc];
+                if (target && chessColor(target) === side) return false;
+                moves.push({ from: [r, c], to: [nr, nc], ...extra });
+                return !target;
+            };
+            if (type === 'p') {
+                const step = side === 'w' ? -1 : 1, start = side === 'w' ? 6 : 1, last = side === 'w' ? 0 : 7;
+                const nr = r + step;
+                if (board[nr]?.[c] === '') {
+                    add(nr, c, nr === last ? { promotion: 'q' } : {});
+                    if (r === start && board[r + 2 * step][c] === '') add(r + 2 * step, c);
+                }
+                for (const dc of [-1, 1]) {
+                    const nc = c + dc, target = board[nr]?.[nc];
+                    if (target && chessColor(target) !== side) add(nr, nc, nr === last ? { promotion: 'q' } : {});
+                    else if (state.ep?.[0] === nr && state.ep?.[1] === nc) moves.push({ from: [r, c], to: [nr, nc], enPassant: true });
+                }
+            } else if (type === 'n') {
+                for (const [dr, dc] of [[-2, -1], [-2, 1], [-1, -2], [-1, 2], [1, -2], [1, 2], [2, -1], [2, 1]]) add(r + dr, c + dc);
+            } else if (type === 'k') {
+                for (const [dr, dc] of CHESS_DIRS) add(r + dr, c + dc);
+                const row = side === 'w' ? 7 : 0, enemy = side === 'w' ? 'b' : 'w';
+                if (r === row && c === 4 && !chessInCheck(state, side)) {
+                    const kingRight = side === 'w' ? 'K' : 'k', queenRight = side === 'w' ? 'Q' : 'q';
+                    if (state.castle.includes(kingRight) && !board[row][5] && !board[row][6] && board[row][7] === (side === 'w' ? 'R' : 'r') &&
+                        !chessAttacked(board, row, 5, enemy) && !chessAttacked(board, row, 6, enemy)) add(row, 6, { castle: 'king' });
+                    if (state.castle.includes(queenRight) && !board[row][1] && !board[row][2] && !board[row][3] && board[row][0] === (side === 'w' ? 'R' : 'r') &&
+                        !chessAttacked(board, row, 3, enemy) && !chessAttacked(board, row, 2, enemy)) add(row, 2, { castle: 'queen' });
+                }
+            } else {
+                const first = type === 'r' ? 0 : type === 'b' ? 4 : 0, last = type === 'r' ? 4 : type === 'b' ? 8 : 8;
+                for (let d = first; d < last; d++) {
+                    const [dr, dc] = CHESS_DIRS[d]; let nr = r + dr, nc = c + dc;
+                    while (add(nr, nc)) { nr += dr; nc += dc; }
+                }
+            }
+            return moves;
+        }
+        function chessApply(state, move) {
+            const board = state.board, [r, c] = move.from, [nr, nc] = move.to, piece = board[r][c], captured = move.enPassant ? board[r][nc] : board[nr][nc];
+            board[r][c] = ''; if (move.enPassant) board[r][nc] = '';
+            board[nr][nc] = move.promotion ? (state.turn === 'w' ? 'Q' : 'q') : piece;
+            if (move.castle) {
+                const row = r, rookFrom = move.castle === 'king' ? 7 : 0, rookTo = move.castle === 'king' ? 5 : 3;
+                board[row][rookTo] = board[row][rookFrom]; board[row][rookFrom] = '';
+            }
+            if (piece.toLowerCase() === 'k') state.castle = state.turn === 'w' ? state.castle.replace(/[KQ]/g, '') : state.castle.replace(/[kq]/g, '');
+            if (r === 7 && c === 0 || nr === 7 && nc === 0 && captured === 'R') state.castle = state.castle.replace('Q', '');
+            if (r === 7 && c === 7 || nr === 7 && nc === 7 && captured === 'R') state.castle = state.castle.replace('K', '');
+            if (r === 0 && c === 0 || nr === 0 && nc === 0 && captured === 'r') state.castle = state.castle.replace('q', '');
+            if (r === 0 && c === 7 || nr === 0 && nc === 7 && captured === 'r') state.castle = state.castle.replace('k', '');
+            state.ep = piece.toLowerCase() === 'p' && Math.abs(nr - r) === 2 ? [(nr + r) / 2, c] : null;
+            state.halfmove = piece.toLowerCase() === 'p' || captured ? 0 : state.halfmove + 1;
+            if (state.turn === 'b') state.fullmove++;
+            state.turn = state.turn === 'w' ? 'b' : 'w';
+            return state;
+        }
+        function chessLegal(state, r, c) {
+            const piece = state.board[r]?.[c]; if (!piece || chessColor(piece) !== state.turn) return [];
+            return chessPseudo(state, r, c).filter(move => !chessInCheck(chessApply(chessCopy(state), move), state.turn));
+        }
+        function chessAllLegal(state) {
+            const all = [];
+            for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) if (state.board[r][c] && chessColor(state.board[r][c]) === state.turn)
+                all.push(...chessLegal(state, r, c));
+            return all;
+        }
+        function chessKey(state) { return state.board.map(row => row.join('')).join('/') + state.turn + state.castle + JSON.stringify(state.ep); }
+        function chessEvaluate(state, side) {
+            let score = 0;
+            for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+                const piece = state.board[r][c]; if (!piece) continue;
+                const value = CHESS_VALUE[piece.toLowerCase()], sign = chessColor(piece) === side ? 1 : -1;
+                const center = 3.5 - (Math.abs(3.5 - r) + Math.abs(3.5 - c)) / 2;
+                score += sign * (value + (piece.toLowerCase() === 'p' ? (side === 'w' ? 6 - r : r - 1) * 5 : center * 5));
+            }
+            return score;
+        }
+        function chessSearch(state, depth, alpha, beta, aiSide) {
+            const moves = chessAllLegal(state);
+            if (!moves.length) return chessInCheck(state, state.turn) ? (state.turn === aiSide ? -100000 - depth : 100000 + depth) : 0;
+            if (state.halfmove >= 100) return 0;
+            if (!depth) return chessEvaluate(state, aiSide);
+            moves.sort((a, b) => Number(!!state.board[b.to[0]][b.to[1]]) - Number(!!state.board[a.to[0]][a.to[1]]) + Number(!!b.promotion) - Number(!!a.promotion));
+            const maximizing = state.turn === aiSide; let best = maximizing ? -Infinity : Infinity;
+            for (const move of moves) {
+                const value = chessSearch(chessApply(chessCopy(state), move), depth - 1, alpha, beta, aiSide);
+                if (maximizing) { best = Math.max(best, value); alpha = Math.max(alpha, best); }
+                else { best = Math.min(best, value); beta = Math.min(beta, best); }
+                if (beta <= alpha) break;
+            }
+            return best;
+        }
+        function chessChooseAI(state) {
+            const moves = chessAllLegal(state); let best = -Infinity, choice = moves[0];
+            for (const move of moves) {
+                const score = chessSearch(chessApply(chessCopy(state), move), 1, -Infinity, Infinity, state.turn);
+                const imperfect = score + (Math.random() - .5) * 10;
+                if (imperfect > best) { best = imperfect; choice = move; }
+            }
+            return choice;
+        }
+
+        function chess(n, mode) {
+            const ai = mode === 'solo', state = chessInitial(), seen = new Map(), undo = [];
+            let selected = null, legal = [], cursor = { r: 7, c: 4 }, aiWait = 0, status = 'دور الأبيض';
+            const recordPosition = () => { const key = chessKey(state); seen.set(key, (seen.get(key) || 0) + 1); };
+            recordPosition();
+            const game = {
+                done: false, win: [], msg: '',
+                finish(result, winner) {
+                    this.done = true; this.outcome = result;
+                    this.win = winner === 'w' ? [0] : winner === 'b' && !ai ? [1] : [];
+                    this.msg = result === 'draw' ? 'تعادل فالشطرنج!' : ai ? (winner === 'w' ? 'كش مات! ربحتي الشطرنج.' : 'كش مات! الكمبيوتر ربح هاد المرة.') : `كش مات! ربح اللاعب ${winner === 'w' ? 1 : 2}.`;
+                },
+                checkEnd() {
+                    const moves = chessAllLegal(state);
+                    if (!moves.length) {
+                        const winner = state.turn === 'w' ? 'b' : 'w';
+                        this.finish(chessInCheck(state, state.turn) ? (ai ? (winner === 'w' ? 'win' : 'loss') : 'win') : 'draw', winner);
+                        return;
+                    }
+                    if (state.halfmove >= 100 || (seen.get(chessKey(state)) || 0) >= 3) this.finish('draw');
+                    if (!this.done) status = `${state.turn === 'w' ? 'دور الأبيض' : 'دور الأسود'}${chessInCheck(state, state.turn) ? ' — كش!' : ''}`;
+                },
+                move(move) {
+                    if (ai && state.turn === 'w') undo.push(chessCopy(state));
+                    else if (!ai) undo.push(chessCopy(state));
+                    chessApply(state, move); selected = null; legal = []; recordPosition(); this.checkEnd();
+                    if (ai && !this.done && state.turn === 'b') aiWait = .32;
+                },
+                choose(r, c) {
+                    if (this.done || (ai && state.turn === 'b')) return;
+                    cursor = { r, c };
+                    const destination = selected && legal.find(m => m.to[0] === r && m.to[1] === c);
+                    if (destination) { this.move(destination); return; }
+                    if (state.board[r][c] && chessColor(state.board[r][c]) === state.turn) { selected = [r, c]; legal = chessLegal(state, r, c); cursor = { r, c }; }
+                    else { selected = null; legal = []; }
+                },
+                undo() {
+                    if (!undo.length || this.done) return;
+                    const previous = undo.pop(); state.board = previous.board; state.turn = previous.turn; state.castle = previous.castle; state.ep = previous.ep; state.halfmove = previous.halfmove; state.fullmove = previous.fullmove;
+                    this.done = false; this.outcome = ''; this.msg = ''; selected = null; legal = []; aiWait = 0; seen.clear(); recordPosition(); status = state.turn === 'w' ? 'دور الأبيض' : 'دور الأسود';
+                },
+                restart() {
+                    const fresh = chessInitial(); state.board = fresh.board; state.turn = fresh.turn; state.castle = fresh.castle; state.ep = null; state.halfmove = 0; state.fullmove = 1;
+                    this.done = false; this.outcome = ''; this.msg = ''; selected = null; legal = []; cursor = { r: 7, c: 4 }; aiWait = 0; undo.length = 0; seen.clear(); recordPosition(); status = 'دور الأبيض';
+                },
+                handleKey(e) {
+                    if (e.repeat) return;
+                    const key = e.key.toLowerCase();
+                    if (key.startsWith('arrow')) { if (key === 'arrowup') cursor.r = Math.max(0, cursor.r - 1); if (key === 'arrowdown') cursor.r = Math.min(7, cursor.r + 1); if (key === 'arrowleft') cursor.c = Math.max(0, cursor.c - 1); if (key === 'arrowright') cursor.c = Math.min(7, cursor.c + 1); }
+                    else if (key === 'enter' || key === ' ') this.choose(cursor.r, cursor.c);
+                    else if (key === 'escape') { selected = null; legal = []; }
+                    else if (key === 'u') this.undo();
+                    else if (key === 'r') this.restart();
+                },
+                update(dt) {
+                    if (aiWait > 0) { aiWait -= dt; if (aiWait <= 0 && !this.done && state.turn === 'b') { const move = chessChooseAI(state); if (move) this.move(move); } }
+                },
+                draw() {
+                    x.fillStyle = '#17203c'; x.fillRect(0, 0, 480, 480); txt(status, 240, 26, 19, '#ffe082');
+                    const size = 50, left = 40, top = 40;
+                    for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+                        const px = left + c * size, py = top + r * size, isLight = (r + c) % 2 === 0;
+                        x.fillStyle = isLight ? '#f0d9b5' : '#9b6244'; x.fillRect(px, py, size, size);
+                        if (selected?.[0] === r && selected?.[1] === c) { x.fillStyle = '#f4d03f88'; x.fillRect(px, py, size, size); }
+                        if (cursor.r === r && cursor.c === c) { x.strokeStyle = '#34d399'; x.lineWidth = 3; x.strokeRect(px + 2, py + 2, size - 4, size - 4); }
+                        const target = legal.find(m => m.to[0] === r && m.to[1] === c);
+                        if (target) { x.fillStyle = state.board[r][c] ? '#e5393588' : '#155e3688'; x.beginPath(); x.arc(px + 25, py + 25, state.board[r][c] ? 21 : 8, 0, Math.PI * 2); x.fill(); }
+                        const piece = state.board[r][c];
+                        if (piece) { x.font = '44px serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.lineWidth = 1.5; x.strokeStyle = chessColor(piece) === 'w' ? '#263238' : '#fff'; x.fillStyle = chessColor(piece) === 'w' ? '#fffdf5' : '#17202a'; x.strokeText(CHESS_GLYPHS[piece], px + 25, py + 27); x.fillText(CHESS_GLYPHS[piece], px + 25, py + 27); }
+                    }
+                    x.textBaseline = 'alphabetic';
+                    x.fillStyle = '#f3c64e'; x.fillRect(130, 445, 105, 31); txt('↶ تراجع (U)', 182, 466, 13, '#1b1b1b');
+                    x.fillStyle = '#f3c64e'; x.fillRect(245, 445, 105, 31); txt('↻ جديد (R)', 297, 466, 13, '#1b1b1b');
+                }
+            };
+            gc.onpointerdown = event => {
+                const rect = gc.getBoundingClientRect(), px = (event.clientX - rect.left) * gc.width / rect.width, py = (event.clientY - rect.top) * gc.height / rect.height;
+                if (py >= 445 && px >= 130 && px <= 235) { game.undo(); return; }
+                if (py >= 445 && px >= 245 && px <= 350) { game.restart(); return; }
+                const c = Math.floor((px - 40) / 50), r = Math.floor((py - 40) / 50);
+                if (r >= 0 && r < 8 && c >= 0 && c < 8) game.choose(r, c);
+            };
+            return game;
+        }
+
+        function checkersInitial() {
+            const board = Array.from({ length: 8 }, () => Array(8).fill(''));
+            for (let r = 0; r < 3; r++) for (let c = 0; c < 8; c++) if ((r + c) % 2) board[r][c] = 'b';
+            for (let r = 5; r < 8; r++) for (let c = 0; c < 8; c++) if ((r + c) % 2) board[r][c] = 'r';
+            return { board, turn: 'r', forced: null, quiet: 0 };
+        }
+        function checkersCopy(s) { return { board: s.board.map(row => row.slice()), turn: s.turn, forced: s.forced && [...s.forced], quiet: s.quiet }; }
+        function checkersSide(piece) { return piece.toLowerCase(); }
+        function checkersCapturesFrom(state, r, c) {
+            const piece = state.board[r]?.[c]; if (!piece) return [];
+            const side = checkersSide(piece), dirs = piece === piece.toUpperCase() ? CHESS_DIRS.slice(4) : (side === 'r' ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]]);
+            const captures = [];
+            for (const [dr, dc] of dirs) {
+                const mr = r + dr, mc = c + dc, tr = r + dr * 2, tc = c + dc * 2, middle = state.board[mr]?.[mc];
+                if (tr >= 0 && tr < 8 && tc >= 0 && tc < 8 && middle && checkersSide(middle) !== side && !state.board[tr][tc])
+                    captures.push({ from: [r, c], to: [tr, tc], capture: [mr, mc] });
+            }
+            return captures;
+        }
+        function checkersMoves(state) {
+            const captures = [];
+            const coords = state.forced ? [state.forced] : Array.from({ length: 64 }, (_, i) => [Math.floor(i / 8), i % 8]);
+            for (const [r, c] of coords) if (state.board[r]?.[c] && checkersSide(state.board[r][c]) === state.turn) captures.push(...checkersCapturesFrom(state, r, c));
+            if (captures.length || state.forced) return captures;
+            const moves = [];
+            for (const [r, c] of coords) {
+                const piece = state.board[r]?.[c]; if (!piece || checkersSide(piece) !== state.turn) continue;
+                const dirs = piece === piece.toUpperCase() ? CHESS_DIRS.slice(4) : (state.turn === 'r' ? [[-1, -1], [-1, 1]] : [[1, -1], [1, 1]]);
+                for (const [dr, dc] of dirs) { const nr = r + dr, nc = c + dc; if (state.board[nr]?.[nc] === '') moves.push({ from: [r, c], to: [nr, nc] }); }
+            }
+            return moves;
+        }
+        function checkersApply(state, move) {
+            const [r, c] = move.from, [nr, nc] = move.to, piece = state.board[r][c];
+            state.board[r][c] = ''; state.board[nr][nc] = piece;
+            if (move.capture) { state.board[move.capture[0]][move.capture[1]] = ''; state.quiet = 0; }
+            else state.quiet++;
+            const promoted = (piece === 'r' && nr === 0) || (piece === 'b' && nr === 7);
+            if (promoted) state.board[nr][nc] = piece.toUpperCase();
+            if (move.capture && !promoted && checkersCapturesFrom(state, nr, nc).length) state.forced = [nr, nc];
+            else { state.forced = null; state.turn = state.turn === 'r' ? 'b' : 'r'; }
+            return state;
+        }
+        function checkersEvaluate(state, side) {
+            let score = 0;
+            for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+                const p = state.board[r][c]; if (!p) continue;
+                const sign = checkersSide(p) === side ? 1 : -1;
+                score += sign * (p === p.toUpperCase() ? 175 : 100 + (side === 'r' ? 5 - r : r - 2) * 4 + (c > 1 && c < 6 ? 4 : 0));
+            }
+            return score;
+        }
+        function checkersSearch(state, depth, alpha, beta, side) {
+            const moves = checkersMoves(state);
+            if (!moves.length) return state.turn === side ? -10000 - depth : 10000 + depth;
+            if (!depth || state.quiet >= 80) return checkersEvaluate(state, side);
+            const max = state.turn === side; let best = max ? -Infinity : Infinity;
+            for (const move of moves) {
+                const value = checkersSearch(checkersApply(checkersCopy(state), move), depth - 1, alpha, beta, side);
+                if (max) { best = Math.max(best, value); alpha = Math.max(alpha, best); }
+                else { best = Math.min(best, value); beta = Math.min(beta, best); }
+                if (beta <= alpha) break;
+            }
+            return best;
+        }
+        function checkersAI(state) {
+            const moves = checkersMoves(state); let best = -Infinity, choice = moves[0];
+            for (const move of moves) {
+                const value = checkersSearch(checkersApply(checkersCopy(state), move), 2, -Infinity, Infinity, state.turn) + Math.random() * 4;
+                if (value > best) { best = value; choice = move; }
+            }
+            return choice;
+        }
+        function checkers(n, mode) {
+            const ai = mode === 'solo', state = checkersInitial(), undo = [];
+            let selected = null, legal = [], cursor = { r: 5, c: 0 }, aiWait = 0, status = 'دور الأحمر';
+            const game = {
+                done: false, win: [], msg: '',
+                finish(winner) {
+                    this.done = true; this.outcome = winner ? (ai ? (winner === 'r' ? 'win' : 'loss') : 'win') : 'draw';
+                    this.win = winner === 'r' ? [0] : winner === 'b' && !ai ? [1] : [];
+                    this.msg = winner ? (ai ? (winner === 'r' ? 'ربحتي الدّامة! ما بقا للكمبيوتر حتى نقلة.' : 'الكمبيوتر ربح الدّامة، جرّب من جديد.') : `ربح اللاعب ${winner === 'r' ? 1 : 2} الدّامة!`) : 'تعادل فالدّامة!';
+                },
+                afterMove() {
+                    selected = state.forced ? [...state.forced] : null; legal = state.forced ? checkersMoves(state) : [];
+                    const count = state.board.flat().filter(p => p && checkersSide(p) === state.turn).length;
+                    if (!count || !checkersMoves(state).length) { this.finish(state.turn === 'r' ? 'b' : 'r'); return; }
+                    if (state.quiet >= 80) { this.finish(null); return; }
+                    status = state.forced ? `${state.turn === 'r' ? 'الأحمر' : 'الأسود'}: كمّل القفزات` : `دور ${state.turn === 'r' ? 'الأحمر' : 'الأسود'}`;
+                    if (ai && state.turn === 'b') aiWait = .32;
+                },
+                commit(move) {
+                    if (!move.capture && !state.forced) return;
+                    if (!ai || state.turn === 'r') undo.push(checkersCopy(state));
+                    checkersApply(state, move); this.afterMove();
+                },
+                choose(r, c) {
+                    if (this.done || (ai && state.turn === 'b')) return;
+                    cursor = { r, c };
+                    const target = selected && legal.find(m => m.to[0] === r && m.to[1] === c);
+                    if (target) { this.commit(target); return; }
+                    const piece = state.board[r][c];
+                    if (piece && checkersSide(piece) === state.turn) { selected = [r, c]; legal = checkersMoves(state).filter(m => m.from[0] === r && m.from[1] === c); cursor = { r, c }; }
+                    else if (!state.forced) { selected = null; legal = []; }
+                },
+                undoMove() {
+                    if (!undo.length || this.done) return;
+                    const previous = undo.pop(); state.board = previous.board; state.turn = previous.turn; state.forced = previous.forced; state.quiet = previous.quiet;
+                    this.done = false; this.outcome = ''; this.msg = ''; selected = null; legal = []; aiWait = 0; status = state.turn === 'r' ? 'دور الأحمر' : 'دور الأسود';
+                },
+                restart() {
+                    const fresh = checkersInitial(); state.board = fresh.board; state.turn = fresh.turn; state.forced = null; state.quiet = 0;
+                    this.done = false; this.outcome = ''; this.msg = ''; selected = null; legal = []; cursor = { r: 5, c: 0 }; aiWait = 0; undo.length = 0; status = 'دور الأحمر';
+                },
+                handleKey(e) {
+                    if (e.repeat) return;
+                    const key = e.key.toLowerCase();
+                    if (key.startsWith('arrow')) { if (key === 'arrowup') cursor.r = Math.max(0, cursor.r - 1); if (key === 'arrowdown') cursor.r = Math.min(7, cursor.r + 1); if (key === 'arrowleft') cursor.c = Math.max(0, cursor.c - 1); if (key === 'arrowright') cursor.c = Math.min(7, cursor.c + 1); }
+                    else if (key === 'enter' || key === ' ') this.choose(cursor.r, cursor.c);
+                    else if (key === 'escape' && !state.forced) { selected = null; legal = []; }
+                    else if (key === 'u') this.undoMove();
+                    else if (key === 'r') this.restart();
+                },
+                update(dt) { if (aiWait > 0) { aiWait -= dt; if (aiWait <= 0 && !this.done && state.turn === 'b') { const move = checkersAI(state); if (move) this.commit(move); } } },
+                draw() {
+                    x.fillStyle = '#17203c'; x.fillRect(0, 0, 480, 480); txt(status, 240, 26, 19, '#ffe082');
+                    const size = 50, left = 40, top = 40;
+                    for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) {
+                        const px = left + c * size, py = top + r * size; x.fillStyle = (r + c) % 2 ? '#744a35' : '#ead9bc'; x.fillRect(px, py, size, size);
+                        if (selected?.[0] === r && selected?.[1] === c) { x.fillStyle = '#f4d03f77'; x.fillRect(px, py, size, size); }
+                        if (cursor.r === r && cursor.c === c) { x.strokeStyle = '#34d399'; x.lineWidth = 3; x.strokeRect(px + 2, py + 2, size - 4, size - 4); }
+                        const target = legal.find(m => m.to[0] === r && m.to[1] === c);
+                        if (target) { x.fillStyle = target.capture ? '#e5393588' : '#155e3688'; x.beginPath(); x.arc(px + 25, py + 25, target.capture ? 21 : 7, 0, Math.PI * 2); x.fill(); }
+                        const p = state.board[r][c]; if (p) { x.fillStyle = p.toLowerCase() === 'r' ? '#e74436' : '#171717'; x.beginPath(); x.arc(px + 25, py + 25, 19, 0, Math.PI * 2); x.fill(); x.strokeStyle = '#fbe6a2'; x.lineWidth = 3; x.stroke(); if (p === p.toUpperCase()) txt('♛', px + 25, py + 33, 22, '#ffe082'); }
+                    }
+                    x.fillStyle = '#f3c64e'; x.fillRect(130, 445, 105, 31); txt('↶ تراجع (U)', 182, 466, 13, '#1b1b1b');
+                    x.fillStyle = '#f3c64e'; x.fillRect(245, 445, 105, 31); txt('↻ جديد (R)', 297, 466, 13, '#1b1b1b');
+                }
+            };
+            gc.onpointerdown = event => {
+                const rect = gc.getBoundingClientRect(), px = (event.clientX - rect.left) * gc.width / rect.width, py = (event.clientY - rect.top) * gc.height / rect.height;
+                if (py >= 445 && px >= 130 && px <= 235) { game.undoMove(); return; }
+                if (py >= 445 && px >= 245 && px <= 350) { game.restart(); return; }
+                const c = Math.floor((px - 40) / 50), r = Math.floor((py - 40) / 50); if (r >= 0 && r < 8 && c >= 0 && c < 8) game.choose(r, c);
+            };
+            return game;
+        }
+
+        function shuffle(items) { for (let i = items.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[items[i], items[j]] = [items[j], items[i]]; } return items; }
+        function sudokuSolvedGrid() {
+            const digits = shuffle([1, 2, 3, 4, 5, 6, 7, 8, 9]), bands = shuffle([0, 1, 2]), stacks = shuffle([0, 1, 2]);
+            const rows = bands.flatMap(b => shuffle([0, 1, 2]).map(r => b * 3 + r));
+            const cols = stacks.flatMap(b => shuffle([0, 1, 2]).map(c => b * 3 + c));
+            return rows.map(r => cols.map(c => digits[(r * 3 + Math.floor(r / 3) + c) % 9]));
+        }
+        function sudokuSolutionCount(board, limit = 2) {
+            let best = null, candidates = null;
+            for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) if (!board[r][c]) {
+                const used = new Set([...board[r], ...board.map(row => row[c]), ...board.slice(Math.floor(r / 3) * 3, Math.floor(r / 3) * 3 + 3).flatMap(row => row.slice(Math.floor(c / 3) * 3, Math.floor(c / 3) * 3 + 3))]);
+                const options = [1, 2, 3, 4, 5, 6, 7, 8, 9].filter(n => !used.has(n));
+                if (!options.length) return 0;
+                if (!candidates || options.length < candidates.length) { best = [r, c]; candidates = options; if (options.length === 1) break; }
+            }
+            if (!best) return 1;
+            let count = 0;
+            for (const value of candidates) { board[best[0]][best[1]] = value; count += sudokuSolutionCount(board, limit - count); board[best[0]][best[1]] = 0; if (count >= limit) return count; }
+            return count;
+        }
+        function sudokuPuzzle() {
+            const solution = sudokuSolvedGrid(), puzzle = solution.map(row => row.slice()), cells = shuffle(Array.from({ length: 81 }, (_, i) => i));
+            let removed = 0;
+            for (const index of cells) {
+                if (removed >= 40) break;
+                const r = Math.floor(index / 9), c = index % 9, value = puzzle[r][c]; puzzle[r][c] = 0;
+                if (sudokuSolutionCount(puzzle.map(row => row.slice()), 2) === 1) removed++;
+                else puzzle[r][c] = value;
+            }
+            return { solution, puzzle };
+        }
+        function sudoku(n, mode) {
+            const { solution, puzzle } = sudokuPuzzle(), board = puzzle.map(row => row.slice()), given = puzzle.map(row => row.map(Boolean)), undo = [];
+            let selected = [0, 0], errors = 0, hints = 3, elapsed = 0, status = 'اختار خانة، ومن بعد اختار الرقم.';
+            const game = {
+                done: false, win: [], msg: '',
+                put(value) {
+                    if (this.done || !selected || given[selected[0]][selected[1]]) return;
+                    const [r, c] = selected;
+                    if (value && board[r][c] === value) return;
+                    if (value) {
+                        let duplicate = board[r].some((v, i) => i !== c && v === value) || board.some((row, i) => i !== r && row[c] === value);
+                        const boxRow = Math.floor(r / 3) * 3, boxCol = Math.floor(c / 3) * 3;
+                        for (let br = boxRow; br < boxRow + 3; br++) for (let bc = boxCol; bc < boxCol + 3; bc++)
+                            if ((br !== r || bc !== c) && board[br][bc] === value) duplicate = true;
+                        if (duplicate) { errors++; status = `هاد الرقم كاين من قبل · أخطاء ${errors}/5`; if (errors >= 5) { this.done = true; this.outcome = 'loss'; this.msg = 'وصلتي لخمس أخطاء. جرّب سودوكو جديدة!'; } return; }
+                    }
+                    undo.push([r, c, board[r][c]]); board[r][c] = value;
+                    status = value ? 'مزيان! كمّل حلّ الشبكة.' : 'الخانة تفرغات.';
+                    if (board.every((row, ri) => row.every((cell, ci) => cell === solution[ri][ci]))) { this.done = true; this.outcome = 'win'; this.win = [0]; this.msg = `حلّيتي السودوكو! الوقت ${Math.floor(elapsed / 60)}:${String(Math.floor(elapsed % 60)).padStart(2, '0')}.`; }
+                },
+                hint() {
+                    if (hints <= 0 || this.done) { status = 'ما بقات حتى مساعدة.'; return; }
+                    if (given[selected[0]][selected[1]]) { status = 'اختار خانة فارغة أولاً.'; return; }
+                    hints--; this.put(solution[selected[0]][selected[1]]); status = `مساعدة مستعملة · بقاو ${hints}`;
+                },
+                undoMove() { const previous = undo.pop(); if (previous && !this.done) { board[previous[0]][previous[1]] = previous[2]; status = 'تراجعنا على آخر رقم.'; } },
+                restart() { const fresh = sudokuPuzzle(); for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) { puzzle[r][c] = fresh.puzzle[r][c]; solution[r][c] = fresh.solution[r][c]; board[r][c] = fresh.puzzle[r][c]; given[r][c] = !!fresh.puzzle[r][c]; } errors = 0; hints = 3; elapsed = 0; undo.length = 0; this.done = false; this.outcome = ''; this.msg = ''; status = 'لغز جديد واجد.'; },
+                handleKey(e) {
+                    if (e.repeat) return;
+                    const key = e.key.toLowerCase(), [r, c] = selected;
+                    if (key === 'arrowup') selected = [Math.max(0, r - 1), c]; else if (key === 'arrowdown') selected = [Math.min(8, r + 1), c];
+                    else if (key === 'arrowleft') selected = [r, Math.max(0, c - 1)]; else if (key === 'arrowright') selected = [r, Math.min(8, c + 1)];
+                    else if (/^[1-9]$/.test(e.key)) this.put(Number(e.key)); else if (key === 'backspace' || key === 'delete' || key === '0') this.put(0);
+                    else if (key === 'h') this.hint(); else if (key === 'u') this.undoMove(); else if (key === 'r') this.restart();
+                },
+                update(dt) { if (!this.done) elapsed += dt; },
+                draw() {
+                    x.fillStyle = '#17203c'; x.fillRect(0, 0, 480, 480); txt(`⏱ ${Math.floor(elapsed / 60)}:${String(Math.floor(elapsed % 60)).padStart(2, '0')} · ${errors}/5 · 💡${hints}`, 300, 20, 13, '#ffe082');
+                    x.fillStyle = '#f3c64e'; x.fillRect(5, 3, 42, 30); txt('💡', 26, 25, 16, '#1b1b1b');
+                    x.fillRect(52, 3, 42, 30); txt('↶', 73, 25, 18, '#1b1b1b');
+                    x.fillRect(99, 3, 42, 30); txt('↻', 120, 25, 18, '#1b1b1b');
+                    const left = 42, top = 27, size = 44;
+                    for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) {
+                        const px = left + c * size, py = top + r * size;
+                        x.fillStyle = selected[0] === r && selected[1] === c ? '#f4d03f66' : given[r][c] ? '#e8d8b8' : '#fff9e8'; x.fillRect(px, py, size, size);
+                        if (selected[0] === r || selected[1] === c) { x.fillStyle = '#83b8e544'; x.fillRect(px, py, size, size); }
+                        if (board[r][c]) { x.font = '900 25px Cairo,Tahoma,sans-serif'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = given[r][c] ? '#263238' : '#125e9b'; x.fillText(board[r][c], px + 22, py + 22); }
+                        x.strokeStyle = c % 3 === 0 ? '#17203c' : '#77808c'; x.lineWidth = c % 3 === 0 ? 2.5 : 1; x.strokeRect(px, py, size, size);
+                        x.strokeStyle = r % 3 === 0 ? '#17203c' : '#77808c'; x.lineWidth = r % 3 === 0 ? 2.5 : 1; x.strokeRect(px, py, size, size);
+                    }
+                    txt(status, 240, 434, 11, '#fff');
+                    for (let value = 1; value <= 9; value++) { const px = 42 + (value - 1) * 44; x.fillStyle = '#ffe082'; x.fillRect(px + 1, 438, 42, 40); txt(String(value), px + 22, 465, 19, '#18253a'); }
+                }
+            };
+            gc.onpointerdown = event => {
+                const rect = gc.getBoundingClientRect(), px = (event.clientX - rect.left) * gc.width / rect.width, py = (event.clientY - rect.top) * gc.height / rect.height;
+                if (py <= 33 && px >= 5 && px <= 47) { game.hint(); return; }
+                if (py <= 33 && px >= 52 && px <= 94) { game.undoMove(); return; }
+                if (py <= 33 && px >= 99 && px <= 141) { game.restart(); return; }
+                if (py >= 438 && py <= 478 && px >= 42 && px < 438) { game.put(Math.floor((px - 42) / 44) + 1); return; }
+                const c = Math.floor((px - 42) / 44), r = Math.floor((py - 27) / 44); if (r >= 0 && r < 9 && c >= 0 && c < 9) selected = [r, c];
+            };
+            return game;
+        }
+
+        menu();
+    </script>
+</body>
+
+</html>
