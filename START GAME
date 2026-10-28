@@ -1,0 +1,5 @@
+@echo off
+cd /d "%~dp0"
+start "YASSINZN Server" /min cmd /c "node server.cjs"
+timeout /t 2 /nobreak >nul
+start "YASSINZN" "http://localhost:8766/AssetsScripts/%D8%A3%D9%84%D8%B9%D8%A7%D8%A8%20234.html"
